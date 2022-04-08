@@ -39,7 +39,7 @@ public class Question extends BaseEntity{
     @Column(length = 20, nullable = false)
     private DifficultyQuestion difficult;
 
-    @ManyToOne(cascade = CascadeType.ALL,optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "test_id",nullable = false)
     private Test test;
 

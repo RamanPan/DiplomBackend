@@ -22,8 +22,12 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(name = "date_register",nullable = false)
+    @Column(name = "date_register")
     private Date created;
+
+    @LastModifiedDate
+    @Column(name = "date_updated")
+    private Date updated;
 
 
 }

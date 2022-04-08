@@ -13,15 +13,15 @@ import javax.persistence.*;
 @Entity
 @Table
 public class UsersAnswers extends BaseEntity {
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "usertest_id",nullable = false)
     private UsersTests test;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "question_id",nullable = false)
     private Question question;
 

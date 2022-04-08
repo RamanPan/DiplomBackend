@@ -98,9 +98,10 @@ public class AuthenticationRestControllerV1 {
     }
 
     @RequestMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity.BodyBuilder logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request,response,null);
+        return ResponseEntity.ok();
     }
 
 }

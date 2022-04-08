@@ -22,7 +22,7 @@ public class Answer extends BaseEntity {
 
     private Boolean is_correct;
 
-    @ManyToOne(cascade = CascadeType.ALL,optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "question_id",nullable = false)
     private Question question;
 

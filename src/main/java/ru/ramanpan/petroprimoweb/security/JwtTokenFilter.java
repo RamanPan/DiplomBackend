@@ -20,13 +20,6 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String path = ((HttpServletRequest) servletRequest).getServletPath();
-        if ("/api/v1/log".equals(path)) {
-            System.out.println("Done");
-        }
-        if ("/api/v1/register".equals(path)) {
-            System.out.println("Done1");
-        }
         String token = provider.resolveToken((HttpServletRequest) servletRequest);
         try {
             if(token != null && provider.validateToken(token)) {

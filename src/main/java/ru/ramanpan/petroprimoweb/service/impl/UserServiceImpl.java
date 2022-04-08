@@ -32,6 +32,11 @@ public class UserServiceImpl implements UserService {
         System.out.println(user);
         return userRepo.save(user);
     }
+    @Override
+    public User update(User user) {
+
+        return userRepo.save(user);
+    }
 
     @Override
     public List<User> getAll() {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonSerializable;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
+import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.model.enums.Role;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
 
@@ -46,5 +47,8 @@ public class ActualUserDTO implements Serializable {
         this.description = description;
         this.picture = picture;
         this.token = token;
+    }
+    public static ActualUserDTO mapToDTO(User user) {
+        return new ActualUserDTO(user.getId(),user.getCreated(),user.getNickname(),user.getFullname(),user.getEmail(),user.getRole().name(),user.getDescription(),user.getPicture(),"");
     }
 }

@@ -6,6 +6,7 @@ import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.TestService;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,7 +39,8 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public void save(Test test) {
-        testRepo.save(test);
+    public Long save(Test test) {
+        test.setCreated(new Date());
+        return testRepo.save(test).getId();
     }
 }

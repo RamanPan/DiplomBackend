@@ -16,11 +16,11 @@ import java.util.Objects;
 @Entity(name = "users_tests")
 public class UsersTests extends BaseEntity{
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "test_id",nullable = false)
     private Test test;
 

@@ -64,8 +64,4 @@ public class Test extends BaseEntity{
         return getClass().hashCode();
     }
 
-//    @JsonIgnore
-//    public User getUser() {
-//        return user;
-//    }
 }
