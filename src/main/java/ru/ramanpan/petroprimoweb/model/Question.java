@@ -5,22 +5,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.data.annotation.CreatedDate;
 import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 @Table
-public class Question extends BaseEntity{
+public class Question {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @CreatedDate
+    @Column(name = "date_register")
+    private Date created;
 
     @Column(length = 1000,nullable = false)
     private String statement;
@@ -39,11 +47,11 @@ public class Question extends BaseEntity{
     @Column(length = 20, nullable = false)
     private DifficultyQuestion difficult;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id",nullable = false)
     private Test test;
 
-    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<Answer> answers = new HashSet<>();
 
     @Override

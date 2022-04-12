@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User save(User user) {
+        return userRepo.save(user);
+    }
+
+    @Override
     public User register(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setStatus(Status.ACTIVE);
@@ -34,8 +39,13 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User update(User user) {
-
         return userRepo.save(user);
+    }
+
+    @Override
+    public Long changePassword(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        return userRepo.save(user).getId();
     }
 
     @Override

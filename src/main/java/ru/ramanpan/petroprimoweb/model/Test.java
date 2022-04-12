@@ -10,13 +10,10 @@ import org.hibernate.Hibernate;
 import ru.ramanpan.petroprimoweb.model.enums.TestType;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 @Table(name = "tests")
@@ -31,9 +28,9 @@ public class Test extends BaseEntity{
 
     private String author;
 
-    private Integer number_questions;
+    private Integer numberQuestions;
 
-    private Integer number_passes;
+    private Integer numberPasses;
 
     @Column(length = 1000)
     private String description;
@@ -44,11 +41,11 @@ public class Test extends BaseEntity{
 //    @JoinColumn(nullable = false,name = "user_id")
 //    private User user;
 
-    @OneToMany(mappedBy = "test",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private Set<Result> results = new HashSet<>();
+    @OneToMany(mappedBy = "test",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Result> results = new ArrayList<>();
 
-    @OneToMany(mappedBy = "test",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private Set<Question> questions = new HashSet<>();
+    @OneToMany(mappedBy = "test",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Question> questions = new ArrayList<>();
 
 
     @Override

@@ -19,31 +19,14 @@ public class ResultDTO {
 
     private String picture;
 
+    private Integer startCondition;
+
+    private Integer endCondition;
+
+    private Boolean correctness;
+
     private Long test;
 
     private TestDTO t;
-    public ResultDTO(Long id, Date created, String description, String header, String picture, Long test) {
-        this.id = id;
-        this.created = created;
-        this.description = description;
-        this.header = header;
-        this.picture = picture;
-        this.test = test;
-    }
 
-    public ResultDTO(String description, String header, String picture, Long test) {
-        this.description = description;
-        this.header = header;
-        this.picture = picture;
-        this.test = test;
-    }
-
-    public ResultDTO(Long id, Date created, String description, String header, String picture, TestDTO t) {
-        this.id = id;
-        this.created = created;
-        this.description = description;
-        this.header = header;
-        this.picture = picture;
-        this.t = t;
-    }
 }

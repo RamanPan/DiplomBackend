@@ -1,6 +1,7 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepo answerRepo;
     private final QuestionRepo questionRepo;
@@ -38,7 +40,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public void deleteById(Long id) {
-        answerRepo.deleteById(id);
+        answerRepo.delete(findById(id));
     }
 
     @Override

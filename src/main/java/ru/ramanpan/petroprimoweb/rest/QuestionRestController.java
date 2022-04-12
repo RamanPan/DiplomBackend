@@ -1,11 +1,13 @@
 package ru.ramanpan.petroprimoweb.rest;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.CreateTestDTO;
-import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
+import ru.ramanpan.petroprimoweb.DTO.*;
+import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
@@ -18,18 +20,31 @@ import ru.ramanpan.petroprimoweb.service.impl.QuestionServiceImpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionRestController {
     private final QuestionService questionService;
     private final TestService testService;
+    private final ModelMapper modelMapper;
     @Value("${upload.path.question}")
     private String uploadPath;
-    public QuestionRestController(QuestionService questionService, TestService testService) {
+
+    private Set<AnsDTO> getSetAnswerDTO(List<Answer> tests) {
+        Set<AnsDTO> answers = new HashSet<>();
+        for(Answer a : tests) answers.add(modelMapper.map(a,AnsDTO.class));
+        return answers;
+
+    }
+
+    public QuestionRestController(QuestionService questionService, TestService testService,ModelMapper modelMapper) {
         this.questionService = questionService;
         this.testService = testService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/upload")
@@ -41,13 +56,18 @@ public class QuestionRestController {
         }
         return ResponseEntity.ok();
     }
+    @PostMapping("/getAnswers")
+    public Set<AnsDTO> getAnswers(@RequestBody IdDTO id) {
+        return getSetAnswerDTO(questionService.getAnswers(id.getId()));
+    }
+
 
     @PostMapping("/create")
     public Long createQuestion(@RequestBody QuestionDTO questionDTO) {
         Question question = new Question();
         question.setStatement(questionDTO.getStatement());
-        if(questionDTO.getPicture().equals(" ")) question.setPicture("questions/plug.png");
-        else question.setPicture("questions/"+questionDTO.getPicture());
+        if(questionDTO.getPicture().equals(" ")) question.setPicture("plug.png");
+        else question.setPicture(questionDTO.getPicture());
         question.setTest(testService.findById(questionDTO.getTest()));
         String questionType = questionDTO.getType();
         String questionDifficult = questionDTO.getDifficult();
@@ -61,5 +81,13 @@ public class QuestionRestController {
         else if(questionDifficult.equals("Культурная")) question.setCategory(QuestionCategory.CULTURE);
         else question.setCategory(QuestionCategory.ECONOMIC);
         return questionService.save(question);
+    }
+    @Transactional
+    @DeleteMapping("/delete")
+    public Integer deleteQuestion(@RequestBody DeleteDTO deleteDTO) {
+        System.out.println(deleteDTO);
+        questionService.deleteById(deleteDTO.getId());
+        return 1;
+
     }
 }

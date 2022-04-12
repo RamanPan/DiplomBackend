@@ -10,5 +10,6 @@ public interface TestService {
     Test findById(Long id);
     void deleteById(Long id);
     Test findByName(String name);
-    Long save(Test test);
+    Test save(Test test);
+    List<Test> findByAuthor(String author);
 }

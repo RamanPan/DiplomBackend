@@ -53,6 +53,11 @@ public class User{
 
     private String picture;
 
+    private Integer countPassed;
+
+    private Integer countCreated;
+
+
     public User() {
         this.id = 0L;
     }

@@ -1,6 +1,7 @@
 package ru.ramanpan.petroprimoweb.rest;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
@@ -20,12 +21,11 @@ public class AnswerRestController {
         this.answerService = answerService;
         this.questionService = questionService;
     }
-
     @DeleteMapping("/delete")
-    public ResponseEntity.BodyBuilder deleteAnswer(@RequestBody DeleteDTO deleteDTO) {
+    public Integer deleteAnswer(@RequestBody DeleteDTO deleteDTO) {
         System.out.println(deleteDTO);
         answerService.deleteById(deleteDTO.getId());
-        return ResponseEntity.ok();
+        return 1;
 
     }
 
@@ -33,7 +33,7 @@ public class AnswerRestController {
     public Long createAnswer(@RequestBody AnswerDTO answerDTO) {
         Answer answer = new Answer();
         System.out.println(answerDTO);
-        answer.setIs_correct(answerDTO.getCorrectness());
+        answer.setCorrectness(answerDTO.getCorrectness());
         answer.setStatement(answerDTO.getStatement());
         answer.setQuestion(questionService.findById(answerDTO.getQuestion()));
         return answerService.save(answer);

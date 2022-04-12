@@ -24,9 +24,9 @@ public class TestDTO {
 
     private Double mark;
 
-    private Integer number_questions;
+    private Integer numberQuestions;
 
-    private Integer number_passes;
+    private Integer numberPasses;
 
     private String author;
 
@@ -38,14 +38,14 @@ public class TestDTO {
 
     private Set<QuestionDTO> questions;
 
-    public TestDTO(Long id, Date created, String name, String testType, Double mark, Integer number_questions, Integer number_passes, String author, String description, String picture, Set<ResultDTO> results, Set<QuestionDTO> questions) {
+    public TestDTO(Long id, Date created, String name, String testType, Double mark, Integer numberQuestions, Integer numberPasses, String author, String description, String picture, Set<ResultDTO> results, Set<QuestionDTO> questions) {
         this.id = id;
         this.created = created;
         this.name = name;
         this.testType = testType;
         this.mark = mark;
-        this.number_questions = number_questions;
-        this.number_passes = number_passes;
+        this.numberQuestions = numberQuestions;
+        this.numberPasses = numberPasses;
         this.author = author;
         this.description = description;
         this.picture = picture;

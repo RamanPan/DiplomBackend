@@ -1,7 +1,5 @@
 package ru.ramanpan.petroprimoweb.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,9 +23,17 @@ public abstract class BaseEntity {
     @Column(name = "date_register")
     private Date created;
 
-    @LastModifiedDate
-    @Column(name = "date_updated")
-    private Date updated;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        BaseEntity that = (BaseEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

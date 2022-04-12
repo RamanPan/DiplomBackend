@@ -34,13 +34,18 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public List<Test> findByAuthor(String author) {
+        return testRepo.findAllByAuthor(author).orElse(null);
+    }
+
+    @Override
     public Test findByName(String name) {
         return testRepo.findByName(name).orElse(null);
     }
 
     @Override
-    public Long save(Test test) {
+    public Test save(Test test) {
         test.setCreated(new Date());
-        return testRepo.save(test).getId();
+        return testRepo.save(test);
     }
 }

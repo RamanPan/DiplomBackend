@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
 import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
 import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
 import ru.ramanpan.petroprimoweb.model.Question;
@@ -32,21 +33,32 @@ public class ResultRestController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file" ) MultipartFile file) throws IOException {
+    public Integer uploadPicture(@RequestParam("file" ) MultipartFile file) throws IOException {
         if(file!= null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
             String path = uploadPath + "/" + file.getOriginalFilename();
             System.out.println(path);
             file.transferTo(new File(path));
         }
-        return ResponseEntity.ok();
+        return 1;
     }
 
     @PostMapping("/create")
-    public Long createQuestion(@RequestBody ResultDTO resultDTO) {
+    public Long createResult(@RequestBody ResultDTO resultDTO) {
         Result result = new Result();
+        System.out.println(resultDTO);
         result.setDescription(resultDTO.getDescription());
-        result.setPicture("results/"+resultDTO.getPicture());
+        result.setPicture(resultDTO.getPicture());
+        result.setHeader(resultDTO.getHeader());
+        result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
+        result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
         result.setTest(testService.findById(resultDTO.getTest()));
         return resultService.save(result);
+    }
+    @DeleteMapping("/delete")
+    public Integer deleteResult(@RequestBody DeleteDTO deleteDTO) {
+        System.out.println(deleteDTO);
+        resultService.deleteById(deleteDTO.getId());
+        return 1;
+
     }
 }

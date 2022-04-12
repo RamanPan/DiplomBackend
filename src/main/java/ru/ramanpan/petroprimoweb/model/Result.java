@@ -23,8 +23,15 @@ public class Result extends BaseEntity {
 
     private String picture;
 
-    @ManyToOne(cascade = CascadeType.ALL,optional = false)
+    private Double startCondition;
+
+    private Double endCondition;
+
+    private Boolean correctness;
+
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id",nullable = false)
+    @ToString.Exclude
     private Test test;
 
 }
