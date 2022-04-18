@@ -3,6 +3,8 @@ package ru.ramanpan.petroprimoweb.DTO;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class UserAnswerDTO {
     private Long id;
@@ -11,7 +13,9 @@ public class UserAnswerDTO {
 
     private String answer;
 
-    private String rightAnswer;
+    private String picture;
+
+    private List<String> rightAnswer;
 
     private Boolean correctness;
 }

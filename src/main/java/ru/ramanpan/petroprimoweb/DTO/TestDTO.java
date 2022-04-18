@@ -34,6 +34,7 @@ public class TestDTO {
 
     private String picture;
 
+
     private Set<ResultDTO> results;
 
     private Set<QuestionDTO> questions;

@@ -3,10 +3,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.DTO.UsersAnswersDTO;
-import ru.ramanpan.petroprimoweb.model.Answer;
-import ru.ramanpan.petroprimoweb.model.Question;
-import ru.ramanpan.petroprimoweb.model.Test;
-import ru.ramanpan.petroprimoweb.model.UsersAnswers;
+import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.repository.*;
 import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
 
@@ -45,6 +42,11 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     @Override
     public List<UsersAnswers> findAll() {
         return usersAnswersRepo.findAll();
+    }
+
+    @Override
+    public List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests) {
+        return usersAnswersRepo.findAllByUserAndTest(user,usersTests).orElse(null);
     }
 
     @Override

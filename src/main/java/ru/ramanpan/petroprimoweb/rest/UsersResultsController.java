@@ -57,5 +57,11 @@ public class UsersResultsController {
 
         return userResultDTOS;
     }
+    @PostMapping("/getResult")
+    public UserResultDTO getResult(@RequestBody UsersResultsDTO dto) {
+        UsersResults userResult = usersResultsService.findResultByUserAndTest(userService.findById(dto.getUser()),usersTestsService.findById(dto.getUserTest()));
+        return toUserResultDTO(userResult);
+    }
+
 
 }

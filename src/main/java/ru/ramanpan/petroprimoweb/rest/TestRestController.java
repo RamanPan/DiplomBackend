@@ -62,6 +62,9 @@ public class TestRestController {
         test.setMark(0.0);
         test.setNumberPasses(0);
         test.setNumberQuestions(0);
+        User u = userService.findByNickname(testDTO.getAuthor());
+        u.setCountCreated(u.getCountCreated()+1);
+        userService.update(u);
         if(testDTO.getPicture().equals("")) test.setPicture("plug.png");
         else test.setPicture(testDTO.getPicture());
         String test_role = testDTO.getTestType();
@@ -141,6 +144,13 @@ public class TestRestController {
         test.setNumberQuestions(testDTO.getNumberQuestions());
         return testService.save(test).getNumberQuestions();
     }
+    @PostMapping("/setNQ")
+    public Long setNQ(@RequestBody IdDTO dto) {
+        Test test = testService.findById(dto.getId());
+        test.setNumberQuestions(test.getQuestions().size());
+        return  testService.update(test).getId();
+    }
+
 
     @PostMapping("/setNumberPasses")
     public Integer setNumberPasses(@RequestBody UploadTestDTO testDTO) {

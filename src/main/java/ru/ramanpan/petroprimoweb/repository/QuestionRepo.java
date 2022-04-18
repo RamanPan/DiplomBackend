@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface QuestionRepo extends JpaRepository<Question,Long> {
     Optional<List<Question>> findAllByTest(Test test);
     Optional<Question> findByStatement(String statement);
+
 }

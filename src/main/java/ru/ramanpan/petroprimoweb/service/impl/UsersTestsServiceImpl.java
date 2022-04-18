@@ -3,6 +3,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.DTO.UsersResultsDTO;
 import ru.ramanpan.petroprimoweb.model.Test;
+import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.model.UsersResults;
 import ru.ramanpan.petroprimoweb.model.UsersTests;
 import ru.ramanpan.petroprimoweb.model.enums.Correctness;
@@ -15,6 +16,7 @@ import ru.ramanpan.petroprimoweb.service.UsersTestsService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UsersTestsServiceImpl implements UsersTestsService{
@@ -39,23 +41,45 @@ public class UsersTestsServiceImpl implements UsersTestsService{
     public UsersTests findById(Long id) {
         return usersTestsRepo.findById(id).orElse(null);
     }
-
     @Override
     public void deleteById(Long id) {
         usersTestsRepo.deleteById(id);
     }
 
     @Override
-    public Long update(UsersTests usersTests, UsersResultsDTO dto) {
+    public UsersTests setMark(UsersTests usersTests) {
+        Test t =usersTests.getTest();
+        t.setNumberPasses(t.getNumberPasses()+1);
+        List<UsersTests> usersTestsList = usersTestsRepo.findAllByTest(t).orElse(null);
+        assert usersTestsList != null;
+        double markTest = usersTests.getMark(); int counter = 1;
+        for(UsersTests u : usersTestsList) {
+            if(u.getMark() != 0) {markTest += u.getMark();++counter;}
+        }
+        t.setMark(markTest/counter);
+        testRepo.save(t);
+        return usersTestsRepo.save(usersTests);
+    }
+
+    @Override
+    public UsersResults setResultToTest(UsersTests usersTests, UsersResultsDTO dto) {
         UsersResults usersResults = new UsersResults();
+        Test t = testRepo.findById(usersTests.getTest().getId()).orElse(null);
+        User u = userRepo.findById(usersTests.getUser().getId()).orElse(null);
+        assert t != null;
+        t.setNumberPasses(t.getNumberPasses()+1);
+        assert u != null;
+        u.setCountPassed(u.getCountPassed()+1);
+        userRepo.save(u);
         usersResults.setCreated(new Date());
         usersTests.setCorrectness(Correctness.INCORRECT);
         usersResults.setUser(userRepo.findById(dto.getUser()).orElse(null));
         usersResultsService.findResult(usersResults,usersTests);
         System.out.println(usersResults);
         usersResults.setTest(usersTests);
+        usersTestsRepo.save(usersTests);
         usersResultsService.save(usersResults);
-        return usersTestsRepo.save(usersTests).getId();
+        return usersResultsService.save(usersResults);
     }
 
     @Override

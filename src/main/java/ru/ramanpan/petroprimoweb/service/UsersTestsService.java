@@ -13,5 +13,6 @@ public interface UsersTestsService {
     UsersTests findById(Long id);
     void deleteById(Long id);
     UsersTests save(UsersTests usersTests);
-    Long update(UsersTests usersTests, UsersResultsDTO dto);
+    UsersTests setMark(UsersTests usersTests);
+    UsersResults setResultToTest(UsersTests usersTests, UsersResultsDTO dto);
 }

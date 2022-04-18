@@ -14,4 +14,5 @@ public interface UsersResultsService {
     UsersResults save(UsersResults usersResults);
     UsersResults findResult(UsersResults usersResults, UsersTests userTests);
     List<UsersResults> findResultByUser(User user);
+    UsersResults findResultByUserAndTest(User user,UsersTests usersTests);
 }

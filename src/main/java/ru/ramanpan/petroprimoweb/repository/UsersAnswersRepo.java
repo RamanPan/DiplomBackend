@@ -11,4 +11,5 @@ public interface UsersAnswersRepo extends JpaRepository<UsersAnswers,Long> {
     Optional<List<UsersAnswers>> findAllByAnswer(String answer);
     Optional<List<UsersAnswers>> findAllByQuestion(Question question);
     Optional<List<UsersAnswers>> findAllByTest(UsersTests usersTests);
+    Optional<List<UsersAnswers>> findAllByUserAndTest(User user,UsersTests usersTests);
 }

@@ -35,7 +35,7 @@ public class UsersResultsServiceImpl implements UsersResultsService {
         result = countRight/usersAnswers.size() * 100;
         assert results != null;
         for (Result r : results) {
-            if(r.getStartCondition() <= result && result < r.getEndCondition()) {
+            if(r.getStartCondition() <= result && result <= r.getEndCondition()) {
                 usersResults.setResult(r);
                 usersResults.setResultNum(result);
                 if(r.getCorrectness()) userTests.setCorrectness(Correctness.CORRECT);
@@ -47,6 +47,11 @@ public class UsersResultsServiceImpl implements UsersResultsService {
     @Override
     public List<UsersResults> findResultByUser(User user) {
         return usersResultsRepo.findAllByUser(user).orElse(null);
+    }
+
+    @Override
+    public UsersResults findResultByUserAndTest(User user, UsersTests usersTests) {
+        return usersResultsRepo.findAllByUserAndTest(user,usersTests).orElse(null);
     }
 
     @Override
@@ -67,6 +72,7 @@ public class UsersResultsServiceImpl implements UsersResultsService {
     @Override
     public UsersResults save(UsersResults usersResults) {
         usersResults.setCreated(new Date());
+        System.out.println(usersResults);
         return usersResultsRepo.save(usersResults);
     }
 }

@@ -39,6 +39,11 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public Test update(Test test) {
+        return testRepo.save(test);
+    }
+
+    @Override
     public Test findByName(String name) {
         return testRepo.findByName(name).orElse(null);
     }
