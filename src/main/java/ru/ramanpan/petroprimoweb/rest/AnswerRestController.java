@@ -35,7 +35,7 @@ public class AnswerRestController {
         System.out.println(answerDTO);
         answer.setCorrectness(answerDTO.getCorrectness());
         answer.setStatement(answerDTO.getStatement());
-        answer.setQuestion(questionService.findById(answerDTO.getQuestion()));
+        answer.setQuestion(questionService.findById(answerDTO.getQuestionLong()));
         return answerService.save(answer);
 
     }

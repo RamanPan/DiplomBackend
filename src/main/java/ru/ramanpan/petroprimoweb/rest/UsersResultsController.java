@@ -12,6 +12,7 @@ import ru.ramanpan.petroprimoweb.DTO.UsersTestsDTO;
 import ru.ramanpan.petroprimoweb.model.UsersResults;
 import ru.ramanpan.petroprimoweb.model.UsersTests;
 import ru.ramanpan.petroprimoweb.service.*;
+import ru.ramanpan.petroprimoweb.util.Mapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +25,6 @@ public class UsersResultsController {
     private final ResultService resultService;
     private final UsersTestsService usersTestsService;
 
-    private UserResultDTO toUserResultDTO(UsersResults usersResults) {
-        UserResultDTO u = new UserResultDTO();
-        u.setId(usersResults.getId());
-        u.setResult(usersResults.getResultNum());
-        u.setCorrectness(usersResults.getResult().getCorrectness());
-        u.setHeader(usersResults.getResult().getHeader());
-        u.setDescription(usersResults.getResult().getDescription());
-        u.setPicture(usersResults.getResult().getPicture());
-        u.setName(usersResults.getTest().getTest().getName());
-        u.setCreated(usersResults.getCreated());
-        return u;
-    }
 
 
 
@@ -52,7 +41,7 @@ public class UsersResultsController {
         List<UserResultDTO> userResultDTOS = new ArrayList<>();
 
         for(UsersResults u : usersResults) {
-            userResultDTOS.add(toUserResultDTO(u));
+            userResultDTOS.add(Mapping.toUserResultDTO(u));
         }
 
         return userResultDTOS;
@@ -60,7 +49,7 @@ public class UsersResultsController {
     @PostMapping("/getResult")
     public UserResultDTO getResult(@RequestBody UsersResultsDTO dto) {
         UsersResults userResult = usersResultsService.findResultByUserAndTest(userService.findById(dto.getUser()),usersTestsService.findById(dto.getUserTest()));
-        return toUserResultDTO(userResult);
+        return Mapping.toUserResultDTO(userResult);
     }
 
 

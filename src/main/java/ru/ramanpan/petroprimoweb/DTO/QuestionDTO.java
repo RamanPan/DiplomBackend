@@ -28,20 +28,6 @@ public class QuestionDTO {
 
     private String difficult;
 
-    private Long test;
+    private Long testLong;
 
-
-
-
-    public QuestionDTO(String statement, String picture, String type, String category, String difficult, Long test) {
-        this.statement = statement;
-        this.picture = picture;
-        this.type = type;
-        this.category = category;
-        this.difficult = difficult;
-        this.test = test;
-    }
-
-    public QuestionDTO() {
-    }
 }

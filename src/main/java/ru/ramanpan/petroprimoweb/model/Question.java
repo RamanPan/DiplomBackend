@@ -21,6 +21,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Entity
 @Table
+@ToString
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +50,11 @@ public class Question {
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id",nullable = false)
+    @ToString.Exclude
     private Test test;
 
     @OneToMany(mappedBy = "question",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Set<Answer> answers = new HashSet<>();
 
     @Override

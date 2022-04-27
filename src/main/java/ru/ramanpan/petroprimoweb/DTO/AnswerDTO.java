@@ -20,31 +20,6 @@ public class AnswerDTO {
 
     private Boolean correctness;
 
-    private Long question;
+    private Long questionLong;
 
-    private QuestionDTO q;
-    public AnswerDTO(Long id, Date created, String statement, Boolean correctness, Long question) {
-        this.id = id;
-        this.created = created;
-        this.statement = statement;
-        this.correctness = correctness;
-        this.question = question;
-    }
-
-    public AnswerDTO(String statement, Boolean correctness, Long question) {
-        this.statement = statement;
-        this.correctness = correctness;
-        this.question = question;
-    }
-
-    public AnswerDTO(Long id, Date created, String statement, Boolean correctness, QuestionDTO q) {
-        this.id = id;
-        this.created = created;
-        this.statement = statement;
-        this.correctness = correctness;
-        this.q = q;
-    }
-
-    public AnswerDTO() {
-    }
 }

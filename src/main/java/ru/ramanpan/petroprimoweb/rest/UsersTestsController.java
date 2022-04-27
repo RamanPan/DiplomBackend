@@ -8,6 +8,7 @@ import ru.ramanpan.petroprimoweb.model.UsersResults;
 import ru.ramanpan.petroprimoweb.model.UsersTests;
 import ru.ramanpan.petroprimoweb.model.enums.Correctness;
 import ru.ramanpan.petroprimoweb.service.*;
+import ru.ramanpan.petroprimoweb.util.Mapping;
 
 @RestController
 @RequestMapping("/api/usersTests")
@@ -15,18 +16,6 @@ public class UsersTestsController {
     private final UsersTestsService usersTestsService;
     private final UserService userService;
     private final TestService testService;
-    private UserResultDTO toUserResultDTO(UsersResults usersResults) {
-        UserResultDTO u = new UserResultDTO();
-        u.setId(usersResults.getId());
-        u.setResult(usersResults.getResultNum());
-        u.setCorrectness(usersResults.getResult().getCorrectness());
-        u.setHeader(usersResults.getResult().getHeader());
-        u.setDescription(usersResults.getResult().getDescription());
-        u.setPicture(usersResults.getResult().getPicture());
-        u.setName(usersResults.getTest().getTest().getName());
-        u.setCreated(usersResults.getCreated());
-        return u;
-    }
 
     public UsersTestsController(UsersTestsService usersTestsService, UserService userService, TestService testService) {
         this.usersTestsService = usersTestsService;
@@ -47,12 +36,13 @@ public class UsersTestsController {
     public UserResultDTO setPassed(@RequestBody UsersResultsDTO usersResultsDTO) {
         System.out.println(usersResultsDTO);
         UsersTests usersTests = usersTestsService.findById(usersResultsDTO.getUserTest());
-        return toUserResultDTO(usersTestsService.setResultToTest(usersTests,usersResultsDTO));
+        return Mapping.toUserResultDTO(usersTestsService.setResultToTest(usersTests,usersResultsDTO));
 
     }
     @PostMapping("/setMark")
     public Long setMark(@RequestBody UsersTestsDTO dto) {
         UsersTests u = usersTestsService.findById(dto.getId());
+        System.out.println(dto);
         u.setMark(dto.getMark());
         return usersTestsService.setMark(u).getId();
     }

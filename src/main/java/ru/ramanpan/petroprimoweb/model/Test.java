@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
 import ru.ramanpan.petroprimoweb.model.enums.TestType;
 
 import javax.persistence.*;
@@ -24,6 +25,9 @@ public class Test extends BaseEntity{
     @Column(nullable = false)
     private TestType testType;
 
+    @Enumerated(value = EnumType.STRING)
+    private DeterministicOption optionForDeterministicType;
+
     private Double mark;
 
     private String author;
@@ -31,6 +35,12 @@ public class Test extends BaseEntity{
     private Integer numberQuestions;
 
     private Integer numberPasses;
+
+    private Integer percentCulture;
+
+    private Integer percentPolitic;
+
+    private Integer percentEconomic;
 
     @Column(length = 1000)
     private String description;

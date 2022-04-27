@@ -34,9 +34,9 @@ public class QuestionRestController {
     @Value("${upload.path.question}")
     private String uploadPath;
 
-    private Set<AnsDTO> getSetAnswerDTO(List<Answer> tests) {
-        Set<AnsDTO> answers = new HashSet<>();
-        for(Answer a : tests) answers.add(modelMapper.map(a,AnsDTO.class));
+    private Set<AnswerDTO> getSetAnswerDTO(List<Answer> tests) {
+        Set<AnswerDTO> answers = new HashSet<>();
+        for(Answer a : tests) answers.add(modelMapper.map(a,AnswerDTO.class));
         return answers;
 
     }
@@ -57,7 +57,7 @@ public class QuestionRestController {
         return ResponseEntity.ok();
     }
     @PostMapping("/getAnswers")
-    public Set<AnsDTO> getAnswers(@RequestBody IdDTO id) {
+    public Set<AnswerDTO> getAnswers(@RequestBody IdDTO id) {
         return getSetAnswerDTO(questionService.getAnswers(id.getId()));
     }
 
@@ -65,10 +65,11 @@ public class QuestionRestController {
     @PostMapping("/create")
     public Long createQuestion(@RequestBody QuestionDTO questionDTO) {
         Question question = new Question();
+        System.out.println(questionDTO);
         question.setStatement(questionDTO.getStatement());
         if(questionDTO.getPicture().equals(" ")) question.setPicture("plug.png");
         else question.setPicture(questionDTO.getPicture());
-        question.setTest(testService.findById(questionDTO.getTest()));
+        question.setTest(testService.findById(questionDTO.getTestLong()));
         String questionType = questionDTO.getType();
         String questionDifficult = questionDTO.getDifficult();
         String questionCategory = questionDTO.getCategory();
@@ -78,8 +79,8 @@ public class QuestionRestController {
         else if(questionDifficult.equals("Средняя")) question.setDifficult(DifficultyQuestion.MEDIUM);
         else question.setDifficult(DifficultyQuestion.HARD);
         if(questionCategory.equals("Политическая")) question.setCategory(QuestionCategory.POLITIC);
-        else if(questionDifficult.equals("Культурная")) question.setCategory(QuestionCategory.CULTURE);
-        else question.setCategory(QuestionCategory.ECONOMIC);
+        else if(questionCategory.equals("Экономическая")) question.setCategory(QuestionCategory.ECONOMIC);
+        else question.setCategory(QuestionCategory.CULTURE);
         return questionService.save(question);
     }
     @Transactional

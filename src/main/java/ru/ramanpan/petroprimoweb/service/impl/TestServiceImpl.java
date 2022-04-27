@@ -51,6 +51,9 @@ public class TestServiceImpl implements TestService {
     @Override
     public Test save(Test test) {
         test.setCreated(new Date());
+        test.setPercentCulture(-1);
+        test.setPercentPolitic(-1);
+        test.setPercentEconomic(-1);
         return testRepo.save(test);
     }
 }

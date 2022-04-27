@@ -51,7 +51,7 @@ public class ResultRestController {
         result.setHeader(resultDTO.getHeader());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
         result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
-        result.setTest(testService.findById(resultDTO.getTest()));
+        result.setTest(testService.findById(resultDTO.getTestLong()));
         result.setCorrectness(resultDTO.getCorrectness());
         return resultService.save(result);
     }

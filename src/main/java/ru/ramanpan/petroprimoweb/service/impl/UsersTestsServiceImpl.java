@@ -54,7 +54,7 @@ public class UsersTestsServiceImpl implements UsersTestsService{
         assert usersTestsList != null;
         double markTest = usersTests.getMark(); int counter = 1;
         for(UsersTests u : usersTestsList) {
-            if(u.getMark() != 0) {markTest += u.getMark();++counter;}
+            if(u.getMark() != null && u.getMark() != 0) {markTest += u.getMark();++counter;}
         }
         t.setMark(markTest/counter);
         testRepo.save(t);
@@ -70,15 +70,15 @@ public class UsersTestsServiceImpl implements UsersTestsService{
         t.setNumberPasses(t.getNumberPasses()+1);
         assert u != null;
         u.setCountPassed(u.getCountPassed()+1);
-        userRepo.save(u);
         usersResults.setCreated(new Date());
         usersTests.setCorrectness(Correctness.INCORRECT);
         usersResults.setUser(userRepo.findById(dto.getUser()).orElse(null));
         usersResultsService.findResult(usersResults,usersTests);
-        System.out.println(usersResults);
         usersResults.setTest(usersTests);
+        if(usersTests.getCorrectness().equals(Correctness.CORRECT)) u.setCountPassedCorrect(u.getCountPassedCorrect() + 1);
+        else u.setCountPassedIncorrect(u.getCountPassedIncorrect() + 1);
+        userRepo.save(u);
         usersTestsRepo.save(usersTests);
-        usersResultsService.save(usersResults);
         return usersResultsService.save(usersResults);
     }
 

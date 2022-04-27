@@ -9,6 +9,7 @@ import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -16,6 +17,21 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     private final UsersAnswersRepo usersAnswersRepo;
     private final AnswerRepo answerRepo;
     private final QuestionRepo questionRepo;
+    private boolean checkCorrectness(String answer,String correctAnswer) {
+        if(answer.isEmpty()) return false;
+        int countEquals = 0, countUnequals = 0, minLength;
+        char[] ans = answer.replaceAll(" ","").toLowerCase(Locale.ROOT).toCharArray();
+        char[] corAns = correctAnswer.replaceAll(" ","").toLowerCase(Locale.ROOT).toCharArray();
+        countUnequals += Math.abs(ans.length - corAns.length);
+        minLength = Math.min(ans.length, corAns.length);
+        for(int i = 0; i < minLength; ++i) {
+            if(ans[i] == corAns[i]) countEquals++;
+            else  countUnequals++;
+        }
+
+//        System.out.println(countEquals + " " + countUnequals);
+        return countEquals > countUnequals;
+    }
 
     public UsersAnswersServiceImpl(UsersAnswersRepo usersAnswersRepo, AnswerRepo answerRepo, QuestionRepo questionRepo) {
         this.usersAnswersRepo = usersAnswersRepo;
@@ -27,18 +43,20 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
         Question q = questionRepo.findById(answerDTO.getQuestion()).orElse(null);
-        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q,true).orElse(null);
-        System.out.println(right);
+        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true).orElse(null);
         assert right != null;
-        for (Answer r: right) {
-            if (usersAnswers.getAnswer().equals(r.getStatement())) {
-                correctness = true;
-                break;
+        assert q != null;
+        if (!q.getType().toString().equals("OPEN")) {
+            for (Answer r : right) {
+                if (usersAnswers.getAnswer().equals(r.getStatement())) {
+                    correctness = true;
+                    break;
+                }
             }
+            return correctness;
         }
-        return correctness;
+        return checkCorrectness(usersAnswers.getAnswer(),right.get(0).getStatement());
     }
-
     @Override
     public List<UsersAnswers> findAll() {
         return usersAnswersRepo.findAll();

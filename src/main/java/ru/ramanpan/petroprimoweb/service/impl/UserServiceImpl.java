@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setCountPassedIncorrect(0);
+        user.setCountPassedCorrect(0);
         user.setStatus(Status.ACTIVE);
         user.setPicture(" ");
         user.setDescription(" ");

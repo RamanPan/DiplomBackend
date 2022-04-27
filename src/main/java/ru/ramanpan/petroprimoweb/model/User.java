@@ -57,6 +57,10 @@ public class User{
 
     private Integer countCreated;
 
+    private Integer countPassedCorrect;
+
+    private Integer countPassedIncorrect;
+
 
     public User() {
         this.id = 0L;
