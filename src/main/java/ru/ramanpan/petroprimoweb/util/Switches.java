@@ -1,8 +1,11 @@
 package ru.ramanpan.petroprimoweb.util;
 
+import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
+import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
+import ru.ramanpan.petroprimoweb.DTO.TestCardDTO;
 import ru.ramanpan.petroprimoweb.model.Question;
-import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
-import ru.ramanpan.petroprimoweb.model.enums.TestType;
+import ru.ramanpan.petroprimoweb.model.Test;
+import ru.ramanpan.petroprimoweb.model.enums.*;
 
 import java.util.List;
 
@@ -89,6 +92,80 @@ public class Switches {
             default: return null;
         }
     }
+    public static TestCardDTO testCardForUpdate(TestCardDTO testCardDTO,Test t) {
+        testCardDTO.setIsDeterministic(false);
+        switch (t.getTestType().name()) {
+            case "STOCHASTIC":
+                testCardDTO.setTestTypeNum(0);
+                break;
+            case "DYNAMIC":
+                testCardDTO.setTestTypeNum(2);
+                break;
+            default:
+                testCardDTO.setIsDeterministic(true);
+                testCardDTO.setTestTypeNum(1);
+        }
+        if(t.getOptionForDeterministicType() != null) {
+            switch (t.getOptionForDeterministicType().name()) {
+                case "EASY_MEDIUM_HARD":
+                    testCardDTO.setOptionNum(1);
+                    break;
+                case "EASY_HARD_MEDIUM":
+                    testCardDTO.setOptionNum(2);
+                    break;
+                case "HARD_EASY_MEDIUM":
+                    testCardDTO.setOptionNum(3);
+                    break;
+                case "HARD_MEDIUM_EASY":
+                    testCardDTO.setOptionNum(4);
+                    break;
+                case "MEDIUM_EASY_HARD":
+                    testCardDTO.setOptionNum(5);
+                    break;
+                case "MEDIUM_HARD_EASY":
+                    testCardDTO.setOptionNum(6);
+                    break;
+                case "POLITIC_CULTURE_ECONOMIC":
+                    testCardDTO.setOptionNum(7);
+                    break;
+                case "POLITIC_ECONOMIC_CULTURE":
+                    testCardDTO.setOptionNum(8);
+                    break;
+                case "ECONOMIC_POLITIC_CULTURE":
+                    testCardDTO.setOptionNum(9);
+                    break;
+                case "ECONOMIC_CULTURE_POLITIC":
+                    testCardDTO.setOptionNum(10);
+                    break;
+                case "CULTURE_ECONOMIC_POLITIC":
+                    testCardDTO.setOptionNum(11);
+                    break;
+                case "CULTURE_POLITIC_ECONOMIC":
+                    testCardDTO.setOptionNum(12);
+                    break;
+                default: testCardDTO.setOptionNum(0);
+            }
+        }
+        return testCardDTO;
+    }
+    public static QuestionDTO questionForUpdate(QuestionDTO questionDTO,Question q,int i) {
+        if(q.getType().name().equals("CLOSED")) questionDTO.setTypeNum(0);
+        else {
+            questionDTO.setTypeNum(1);}
+        if(q.getDifficult().name().equals("EASY")) questionDTO.setDifficultNum(0);
+        else if(q.getDifficult().name().equals("MEDIUM")) questionDTO.setDifficultNum(1);
+        else questionDTO.setDifficultNum(2);
+        if(q.getCategory().name().equals("POLITIC")) questionDTO.setCategoryNum(0);
+        else if(q.getCategory().name().equals("ECONOMIC")) questionDTO.setCategoryNum(2);
+        else questionDTO.setCategoryNum(1);
+        questionDTO.setNumber(i);
+        return questionDTO;
+    }
+    public static ResultDTO resultForUpdate(ResultDTO resultDTO, int i) {
+        resultDTO.setNumber(i);
+        return resultDTO;
+    }
+
 
 
     public static TestType selectionTestType(String option) {

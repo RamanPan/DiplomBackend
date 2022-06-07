@@ -1,4 +1,4 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -6,10 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ramanpan.petroprimoweb.DTO.*;
-import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.model.User;
-import ru.ramanpan.petroprimoweb.model.enums.TestType;
-import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.service.UserService;
 
 import java.io.File;
@@ -20,14 +17,14 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserRestController {
+public class UserController {
     private final UserService userService;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${upload.path.user}")
     private String uploadPath;
 
-    public UserRestController(UserService userService, BCryptPasswordEncoder encoder) {
+    public UserController(UserService userService, BCryptPasswordEncoder encoder) {
         this.userService = userService;
         this.encoder = encoder;
     }

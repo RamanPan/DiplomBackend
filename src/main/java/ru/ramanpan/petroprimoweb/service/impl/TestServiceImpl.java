@@ -3,6 +3,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.model.Test;
+import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.TestService;
 
@@ -30,7 +31,11 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public void deleteById(Long id) {
-        testRepo.deleteById(id);
+        Test t = testRepo.findById(id).orElse(null);
+        System.out.println(t);
+        assert t != null;
+        t.setStatus(Status.DELETED);
+        testRepo.save(t);
     }
 
     @Override
@@ -51,6 +56,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public Test save(Test test) {
         test.setCreated(new Date());
+        test.setStatus(Status.ACTIVE);
         test.setPercentCulture(-1);
         test.setPercentPolitic(-1);
         test.setPercentEconomic(-1);

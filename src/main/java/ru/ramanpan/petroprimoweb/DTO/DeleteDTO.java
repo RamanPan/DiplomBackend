@@ -7,8 +7,4 @@ import lombok.ToString;
 @ToString
 public class DeleteDTO {
     private Long id;
-
-    public DeleteDTO(Long id) {
-        this.id = id;
-    }
 }

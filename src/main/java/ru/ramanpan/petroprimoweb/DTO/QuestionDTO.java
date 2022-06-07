@@ -28,6 +28,14 @@ public class QuestionDTO {
 
     private String difficult;
 
+    private int typeNum;
+
+    private int categoryNum;
+
+    private int difficultNum;
+
+    private int number;
+
     private Long testLong;
 
 }

@@ -1,4 +1,4 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 
 import org.springframework.web.bind.annotation.*;
@@ -6,7 +6,6 @@ import ru.ramanpan.petroprimoweb.DTO.*;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.UsersAnswers;
-import ru.ramanpan.petroprimoweb.model.UsersResults;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.service.*;
 

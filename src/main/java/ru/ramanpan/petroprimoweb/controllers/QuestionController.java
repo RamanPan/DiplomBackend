@@ -1,4 +1,4 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,14 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.ramanpan.petroprimoweb.DTO.*;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
-import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
-import ru.ramanpan.petroprimoweb.model.enums.TestType;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
 import ru.ramanpan.petroprimoweb.service.TestService;
-import ru.ramanpan.petroprimoweb.service.impl.QuestionServiceImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +24,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/questions")
-public class QuestionRestController {
+public class QuestionController {
     private final QuestionService questionService;
     private final TestService testService;
     private final ModelMapper modelMapper;
@@ -36,12 +33,17 @@ public class QuestionRestController {
 
     private Set<AnswerDTO> getSetAnswerDTO(List<Answer> tests) {
         Set<AnswerDTO> answers = new HashSet<>();
-        for(Answer a : tests) answers.add(modelMapper.map(a,AnswerDTO.class));
+        int i = 1; AnswerDTO answerDTO;
+        for(Answer a : tests) {
+            answerDTO = modelMapper.map(a,AnswerDTO.class);
+            answerDTO.setNumber(i);
+            answers.add(answerDTO);
+            i++;}
         return answers;
 
     }
 
-    public QuestionRestController(QuestionService questionService, TestService testService,ModelMapper modelMapper) {
+    public QuestionController(QuestionService questionService, TestService testService, ModelMapper modelMapper) {
         this.questionService = questionService;
         this.testService = testService;
         this.modelMapper = modelMapper;

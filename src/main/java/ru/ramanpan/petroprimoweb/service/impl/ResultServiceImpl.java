@@ -56,4 +56,9 @@ public class ResultServiceImpl implements ResultService {
         result.setCreated(new Date());
         return resultRepo.save(result).getId();
     }
+
+    @Override
+    public Long update(Result result) {
+        return resultRepo.save(result).getId();
+    }
 }

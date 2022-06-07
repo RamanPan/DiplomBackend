@@ -25,6 +25,8 @@ public class ResultDTO {
 
     private Boolean correctness;
 
+    private int number;
+
     private Long testLong;
 
 

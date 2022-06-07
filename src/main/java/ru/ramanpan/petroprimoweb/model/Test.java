@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
+import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.model.enums.TestType;
 
 import javax.persistence.*;
@@ -28,6 +29,10 @@ public class Test extends BaseEntity{
     @Enumerated(value = EnumType.STRING)
     private DeterministicOption optionForDeterministicType;
 
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
+
+    @Column(nullable = false)
     private Double mark;
 
     private String author;

@@ -13,4 +13,5 @@ public interface ResultService {
     Result findByDescription(String description);
     Result findByHeader(String header);
     Long save(Result result);
+    Long update(Result result);
 }

@@ -22,4 +22,5 @@ public class AnswerDTO {
 
     private Long questionLong;
 
+    private int number;
 }

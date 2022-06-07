@@ -1,23 +1,19 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
-import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.service.AnswerService;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
-import ru.ramanpan.petroprimoweb.service.impl.AnswerServiceImpl;
 
 @RestController
 @RequestMapping("/api/answers")
-public class AnswerRestController {
+public class AnswerController {
     private final AnswerService answerService;
     private final QuestionService questionService;
 
-    public AnswerRestController(AnswerService answerService, QuestionService questionService) {
+    public AnswerController(AnswerService answerService, QuestionService questionService) {
         this.answerService = answerService;
         this.questionService = questionService;
     }

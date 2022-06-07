@@ -1,11 +1,8 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
@@ -16,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 import ru.ramanpan.petroprimoweb.DTO.ActualUserDTO;
 import ru.ramanpan.petroprimoweb.DTO.AuthenticationRequestDTO;
@@ -30,12 +25,12 @@ import ru.ramanpan.petroprimoweb.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/v1")
-public class AuthenticationRestControllerV1 {
+public class AuthenticationControllerV1 {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtTokenProvider provider;
 
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, UserServiceImpl userService, JwtTokenProvider provider) {
+    public AuthenticationControllerV1(AuthenticationManager authenticationManager, UserServiceImpl userService, JwtTokenProvider provider) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.provider = provider;

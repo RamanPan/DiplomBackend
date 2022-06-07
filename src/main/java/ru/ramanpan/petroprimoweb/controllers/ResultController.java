@@ -1,33 +1,30 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
-import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
+import ru.ramanpan.petroprimoweb.DTO.IdDTO;
 import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
-import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.Result;
-import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
-import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
-import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
 import ru.ramanpan.petroprimoweb.service.ResultService;
 import ru.ramanpan.petroprimoweb.service.TestService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/results")
-public class ResultRestController {
+public class ResultController {
     private final ResultService resultService;
     private final TestService testService;
     @Value("${upload.path.result}")
     private String uploadPath;
 
-    public ResultRestController(ResultService resultService, TestService testService) {
+    public ResultController(ResultService resultService, TestService testService) {
         this.resultService = resultService;
         this.testService = testService;
     }
@@ -45,9 +42,9 @@ public class ResultRestController {
     @PostMapping("/create")
     public Long createResult(@RequestBody ResultDTO resultDTO) {
         Result result = new Result();
-        System.out.println(resultDTO);
         result.setDescription(resultDTO.getDescription());
-        result.setPicture(resultDTO.getPicture());
+        if(resultDTO.getPicture().equals(" ")) result.setPicture("plug.png");
+        else result.setPicture(resultDTO.getPicture());
         result.setHeader(resultDTO.getHeader());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
         result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
@@ -55,6 +52,20 @@ public class ResultRestController {
         result.setCorrectness(resultDTO.getCorrectness());
         return resultService.save(result);
     }
+    @PostMapping("/update")
+    public Long updateResult(@RequestBody ResultDTO resultDTO) {
+        Result result = resultService.findById(resultDTO.getId());
+        result.setDescription(resultDTO.getDescription());
+        result.setPicture(resultDTO.getPicture());
+        result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
+        result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
+        result.setTest(testService.findById(resultDTO.getTestLong()));
+        result.setCorrectness(resultDTO.getCorrectness());
+        result.setHeader(resultDTO.getHeader());
+        return resultService.save(result);
+    }
+
+
     @DeleteMapping("/delete")
     public Integer deleteResult(@RequestBody DeleteDTO deleteDTO) {
         System.out.println(deleteDTO);

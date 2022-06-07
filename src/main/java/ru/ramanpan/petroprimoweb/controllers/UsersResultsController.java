@@ -1,4 +1,4 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ramanpan.petroprimoweb.DTO.IdDTO;
 import ru.ramanpan.petroprimoweb.DTO.UserResultDTO;
 import ru.ramanpan.petroprimoweb.DTO.UsersResultsDTO;
-import ru.ramanpan.petroprimoweb.DTO.UsersTestsDTO;
 import ru.ramanpan.petroprimoweb.model.UsersResults;
-import ru.ramanpan.petroprimoweb.model.UsersTests;
 import ru.ramanpan.petroprimoweb.service.*;
 import ru.ramanpan.petroprimoweb.util.Mapping;
 

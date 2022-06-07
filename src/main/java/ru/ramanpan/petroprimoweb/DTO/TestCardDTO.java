@@ -19,13 +19,21 @@ public class TestCardDTO {
 
     private String testType;
 
+    private int testTypeNum;
+
+    private int optionNum;
+
     private Double mark;
+
+    private String status;
 
     private Integer numberQuestions;
 
     private Integer numberPasses;
 
     private String author;
+
+    private Boolean isDeterministic;
 
     private String description;
 

@@ -1,4 +1,4 @@
-package ru.ramanpan.petroprimoweb.rest;
+package ru.ramanpan.petroprimoweb.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,13 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ramanpan.petroprimoweb.DTO.*;
-import ru.ramanpan.petroprimoweb.model.Question;
-import ru.ramanpan.petroprimoweb.model.Test;
-import ru.ramanpan.petroprimoweb.model.User;
-import ru.ramanpan.petroprimoweb.model.UsersAnswers;
-import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
+import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
+import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.model.enums.TestType;
 import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.service.UserService;
@@ -26,7 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tests")
-public class TestRestController {
+public class TestController {
     private final TestService testService;
     private final UserService userService;
     private final UsersAnswersService usersAnswersService;
@@ -41,7 +38,7 @@ public class TestRestController {
     @Value("${upload.path.test}")
     private String uploadPath;
 
-    public TestRestController(TestService testService, UserService userService, UsersAnswersService usersAnswersService, ModelMapper modelMapper) {
+    public TestController(TestService testService, UserService userService, UsersAnswersService usersAnswersService, ModelMapper modelMapper) {
         this.testService = testService;
         this.userService = userService;
         this.usersAnswersService = usersAnswersService;
@@ -201,12 +198,30 @@ public class TestRestController {
         test.setTestType(Switches.selectionTestType(testType));
         if(test.getTestType().equals(TestType.DETERMINISTIC)) {
             String option = testDTO.getOptionForDeterministicType();
-            test.setOptionForDeterministicType(Switches.selectionOption(option));}
+            test.setOptionForDeterministicType(Switches.selectionOption(option));
+        }
         return testService.save(test).getId();
     }
+    @PostMapping("/update")
+    public Long updateTest(@RequestBody TestDTO testDTO) {
+        Test test = testService.findById(testDTO.getId());
+        test.setName(testDTO.getName());
+        test.setAuthor(testDTO.getAuthor());
+        test.setDescription(testDTO.getDescription());
+        if(testDTO.getPicture().equals("")) test.setPicture("plug.png");
+        else test.setPicture(testDTO.getPicture());
+        String testType = testDTO.getTestType();
+        test.setTestType(Switches.selectionTestType(testType));
+        if(test.getTestType().equals(TestType.DETERMINISTIC)) {
+            String option = testDTO.getOptionForDeterministicType();
+            test.setOptionForDeterministicType(Switches.selectionOption(option));
+        }
+        return testService.update(test).getId();
+    }
+
     @GetMapping("/getTests")
     public Set<TestCardDTO> getTests() {
-        return getSetTestCardDTO(testService.findAll());
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @PostMapping("/getTest")
@@ -218,12 +233,21 @@ public class TestRestController {
         countCorrectNonStop = 0; countIncorrectNonStop = 0;
         passedSuccessfully = user.getCountPassedCorrect();
         passedUnsuccessful = user.getCountPassedIncorrect();
-        if(test.getPercentCulture() > -1) {actualTestWithRightDistribution();
-            System.out.println(actualTest);}
+        if(test.getPercentCulture() > -1) actualTestWithRightDistribution();
         if(!test.getTestType().equals(TestType.DETERMINISTIC)) Collections.shuffle(actualTest);
         else deterministicTest();
-        return modelMapper.map(test,TestCardDTO.class);
+        TestCardDTO testCardDTO = modelMapper.map(test,TestCardDTO.class);
+        testCardDTO.setIsDeterministic(false);
+        return testCardDTO;
     }
+    @PostMapping("/getTestForUpdate")
+    public TestCardDTO getTestForUpdate(@RequestBody TestDTO id) {
+        Test t = testService.findById(id.getId());
+        return Switches.testCardForUpdate(modelMapper.map(t,TestCardDTO.class),t);
+    }
+
+
+
     @PostMapping("/getQuestion")
     public QuestionDTO getQuestion(@RequestBody IdDTO idDTO) {
         Question q;
@@ -235,22 +259,58 @@ public class TestRestController {
         System.out.println(q);
         return modelMapper.map(q,QuestionDTO.class);
     }
+    @PostMapping("/getQuestions")
+    public List<QuestionDTO> getQuestions(@RequestBody IdDTO idDTO) {
+        List<QuestionDTO> questions = new ArrayList<>();
+        int i = 1;
+        for (Question q : testService.findById(idDTO.getId()).getQuestions()) {
+            questions.add(Switches.questionForUpdate(modelMapper.map(q, QuestionDTO.class),q,i));
+            i++;
+        }
+        return questions;
+    }
+    @PostMapping("/getResults")
+    public List<ResultDTO> getResults(@RequestBody IdDTO idDTO) {
+        List<ResultDTO> results= new ArrayList<>();
+        int i = 1;
+        for (Result r : testService.findById(idDTO.getId()).getResults()) {
+            results.add(Switches.resultForUpdate(modelMapper.map(r, ResultDTO.class),i));
+            i++;
+        }
+        return results;
+    }
+    @PostMapping("/getPercents")
+    public List<Integer> getPercents(@RequestBody IdDTO idDTO) {
+        List<Integer> percents= new ArrayList<>();
+        Test test = testService.findById(idDTO.getId());
+        percents.add(test.getNumberQuestions());
+        if(test.getPercentPolitic() > -1) {
+            percents.add(test.getPercentCulture());
+            percents.add(test.getPercentPolitic());
+            percents.add(test.getPercentEconomic());}
+        else {
+            percents.add(0);
+            percents.add(0);
+            percents.add(0);
+        }
+        return percents;
+    }
+
+
+
 
 
     @GetMapping("/getOldTests")
     public Set<TestCardDTO> getOldTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().sorted(Comparator.comparing(TestCardDTO::getCreated)).collect(Collectors.toCollection(LinkedHashSet::new));
-
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getCreated)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
     @GetMapping("/getNewTests")
     public Set<TestCardDTO> getNewTests() {
-
-        return getSetTestCardDTO(testService.findAll()).stream().sorted(Comparator.comparing(TestCardDTO::getCreated).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
-
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getCreated).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
     @GetMapping("/getBestTests")
     public Set<TestCardDTO> getBestTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().sorted(Comparator.comparing(TestCardDTO::getMark).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getMark).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
     @PostMapping("/getFilterTests")
     public Set<TestCardDTO> getFilterTests(@RequestBody String filterType) {
@@ -267,20 +327,20 @@ public class TestRestController {
                 type = TestType.DETERMINISTIC.name();
                 break;
             default:
-                return getSetTestCardDTO(testService.findAll());
+                return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
         }
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> testCardDTO.getTestType().equals(type)).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> testCardDTO.getTestType().equals(type)).filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
     }
     @PostMapping("/getByAuthor")
     public Set<TestCardDTO> getTestsByAuthor(@RequestBody TestDTO testDTO) {
-        return getSetTestCardDTO(testService.findByAuthor(testDTO.getAuthor()));
+        return getSetTestCardDTO(testService.findByAuthor(testDTO.getAuthor())).stream().filter(test1 -> !test1.getStatus().equals(Status.DELETED.name())).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 
-    @PostMapping("/delete")
-    public ResponseEntity.BodyBuilder deleteTest(@RequestBody DeleteDTO deleteDTO) {
+    @DeleteMapping("/delete")
+    public int deleteTest(@RequestBody DeleteDTO deleteDTO) {
         testService.deleteById(deleteDTO.getId());
-        return ResponseEntity.ok();
+        return 1;
     }
     @PostMapping("/setNQ")
     public Long setNQ(@RequestBody IdDTO dto) {
