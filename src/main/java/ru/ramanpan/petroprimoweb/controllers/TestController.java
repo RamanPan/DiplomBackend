@@ -221,7 +221,7 @@ public class TestController {
 
     @GetMapping("/getTests")
     public Set<TestCardDTO> getTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !"DELETED".equals(testCardDTO.getStatus())).collect(Collectors.toCollection(HashSet::new));
     }
 
     @PostMapping("/getTest")

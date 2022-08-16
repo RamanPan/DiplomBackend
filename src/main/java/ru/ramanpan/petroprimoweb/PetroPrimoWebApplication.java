@@ -10,6 +10,7 @@ public class PetroPrimoWebApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PetroPrimoWebApplication.class, args);
+
     }
 
 }

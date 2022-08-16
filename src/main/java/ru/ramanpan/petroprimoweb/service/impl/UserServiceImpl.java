@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) {
+    public void register(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setCountPassedIncorrect(0);
         user.setCountPassedCorrect(0);
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         user.setDescription(" ");
         user.setCreated(new Date());
         System.out.println(user);
-        return userRepo.save(user);
+        userRepo.save(user);
     }
     @Override
     public User update(User user) {

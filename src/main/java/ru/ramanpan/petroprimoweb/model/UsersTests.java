@@ -18,10 +18,12 @@ public class UsersTests extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id",nullable = false)
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_id",nullable = false)
+    @ToString.Exclude
     private Test test;
 
     @Enumerated(value = EnumType.STRING)
