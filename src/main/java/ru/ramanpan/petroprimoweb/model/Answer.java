@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
-import ru.ramanpan.petroprimoweb.model.BaseEntity;
-import ru.ramanpan.petroprimoweb.model.enums.Correctness;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,8 +29,8 @@ public class Answer {
 
     private Boolean correctness;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id",nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
 }

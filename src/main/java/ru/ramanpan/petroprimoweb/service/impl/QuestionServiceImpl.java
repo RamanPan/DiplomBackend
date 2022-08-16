@@ -20,7 +20,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final TestRepo testRepo;
     private final AnswerRepo answerRepo;
 
-    public QuestionServiceImpl(QuestionRepo questionRepo,TestRepo testRepo,AnswerRepo answerRepo) {
+    public QuestionServiceImpl(QuestionRepo questionRepo, TestRepo testRepo, AnswerRepo answerRepo) {
 
         this.questionRepo = questionRepo;
         this.testRepo = testRepo;

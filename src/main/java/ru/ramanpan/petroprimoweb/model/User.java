@@ -2,23 +2,21 @@ package ru.ramanpan.petroprimoweb.model;
 
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
-import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.model.enums.Role;
+import ru.ramanpan.petroprimoweb.model.enums.Status;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.*;
 
 @Getter
 @Setter
 @ToString
 @Entity
 @Table(name = "users")
-public class User{
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

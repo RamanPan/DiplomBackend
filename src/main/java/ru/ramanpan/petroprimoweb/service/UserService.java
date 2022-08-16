@@ -6,11 +6,18 @@ import java.util.List;
 
 public interface UserService {
     void register(User user);
+
     List<User> getAll();
+
     User findByNickname(String username);
+
     User findById(Long id);
+
     void delete(Long id);
+
     User update(User user);
+
     User save(User user);
+
     Long changePassword(User user);
 }

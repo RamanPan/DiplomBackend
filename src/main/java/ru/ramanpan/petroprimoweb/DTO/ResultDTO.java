@@ -2,7 +2,6 @@ package ru.ramanpan.petroprimoweb.DTO;
 
 import lombok.Data;
 import lombok.ToString;
-import ru.ramanpan.petroprimoweb.model.Test;
 
 import java.util.Date;
 

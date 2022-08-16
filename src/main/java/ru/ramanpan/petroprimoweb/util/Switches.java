@@ -5,7 +5,8 @@ import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
 import ru.ramanpan.petroprimoweb.DTO.TestCardDTO;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.Test;
-import ru.ramanpan.petroprimoweb.model.enums.*;
+import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
+import ru.ramanpan.petroprimoweb.model.enums.TestType;
 
 import java.util.List;
 
@@ -36,10 +37,12 @@ public class Switches {
                 return DeterministicOption.CULTURE_ECONOMIC_POLITIC;
             case "Культурные, Политические, Экономические":
                 return DeterministicOption.CULTURE_POLITIC_ECONOMIC;
-            default: return DeterministicOption.UNDEFINED;
+            default:
+                return DeterministicOption.UNDEFINED;
         }
     }
-    public static List<Question> selectionOptionForDeterministic(DeterministicOption option,List<Question> easy,List<Question> medium,List<Question> hard,List<Question> politic,List<Question> culture,List<Question> economic) {
+
+    public static List<Question> selectionOptionForDeterministic(DeterministicOption option, List<Question> easy, List<Question> medium, List<Question> hard, List<Question> politic, List<Question> culture, List<Question> economic) {
         switch (option.name()) {
             case "EASY_MEDIUM_HARD":
                 easy.addAll(medium);
@@ -89,10 +92,12 @@ public class Switches {
                 culture.addAll(politic);
                 culture.addAll(economic);
                 return culture;
-            default: return null;
+            default:
+                return null;
         }
     }
-    public static TestCardDTO testCardForUpdate(TestCardDTO testCardDTO,Test t) {
+
+    public static TestCardDTO testCardForUpdate(TestCardDTO testCardDTO, Test t) {
         testCardDTO.setIsDeterministic(false);
         switch (t.getTestType().name()) {
             case "STOCHASTIC":
@@ -105,7 +110,7 @@ public class Switches {
                 testCardDTO.setIsDeterministic(true);
                 testCardDTO.setTestTypeNum(1);
         }
-        if(t.getOptionForDeterministicType() != null) {
+        if (t.getOptionForDeterministicType() != null) {
             switch (t.getOptionForDeterministicType().name()) {
                 case "EASY_MEDIUM_HARD":
                     testCardDTO.setOptionNum(1);
@@ -143,29 +148,32 @@ public class Switches {
                 case "CULTURE_POLITIC_ECONOMIC":
                     testCardDTO.setOptionNum(12);
                     break;
-                default: testCardDTO.setOptionNum(0);
+                default:
+                    testCardDTO.setOptionNum(0);
             }
         }
         return testCardDTO;
     }
-    public static QuestionDTO questionForUpdate(QuestionDTO questionDTO,Question q,int i) {
-        if(q.getType().name().equals("CLOSED")) questionDTO.setTypeNum(0);
+
+    public static QuestionDTO questionForUpdate(QuestionDTO questionDTO, Question q, int i) {
+        if (q.getType().name().equals("CLOSED")) questionDTO.setTypeNum(0);
         else {
-            questionDTO.setTypeNum(1);}
-        if(q.getDifficult().name().equals("EASY")) questionDTO.setDifficultNum(0);
-        else if(q.getDifficult().name().equals("MEDIUM")) questionDTO.setDifficultNum(1);
+            questionDTO.setTypeNum(1);
+        }
+        if (q.getDifficult().name().equals("EASY")) questionDTO.setDifficultNum(0);
+        else if (q.getDifficult().name().equals("MEDIUM")) questionDTO.setDifficultNum(1);
         else questionDTO.setDifficultNum(2);
-        if(q.getCategory().name().equals("POLITIC")) questionDTO.setCategoryNum(0);
-        else if(q.getCategory().name().equals("ECONOMIC")) questionDTO.setCategoryNum(2);
+        if (q.getCategory().name().equals("POLITIC")) questionDTO.setCategoryNum(0);
+        else if (q.getCategory().name().equals("ECONOMIC")) questionDTO.setCategoryNum(2);
         else questionDTO.setCategoryNum(1);
         questionDTO.setNumber(i);
         return questionDTO;
     }
+
     public static ResultDTO resultForUpdate(ResultDTO resultDTO, int i) {
         resultDTO.setNumber(i);
         return resultDTO;
     }
-
 
 
     public static TestType selectionTestType(String option) {
@@ -174,7 +182,8 @@ public class Switches {
                 return TestType.STOCHASTIC;
             case "Динамический":
                 return TestType.DYNAMIC;
-            default: return TestType.DETERMINISTIC;
+            default:
+                return TestType.DETERMINISTIC;
         }
     }
 }

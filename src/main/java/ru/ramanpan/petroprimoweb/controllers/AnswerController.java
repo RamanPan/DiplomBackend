@@ -17,6 +17,7 @@ public class AnswerController {
         this.answerService = answerService;
         this.questionService = questionService;
     }
+
     @DeleteMapping("/delete")
     public Integer deleteAnswer(@RequestBody DeleteDTO deleteDTO) {
         System.out.println(deleteDTO);

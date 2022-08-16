@@ -7,10 +7,16 @@ import java.util.List;
 
 public interface QuestionService {
     List<Question> findAll();
+
     Question findById(Long id);
+
     List<Question> findAllByTestId(Long test_id);
+
     void deleteById(Long id);
+
     List<Answer> getAnswers(Long id);
+
     Question findByStatement(String statement);
+
     Long save(Question question);
 }

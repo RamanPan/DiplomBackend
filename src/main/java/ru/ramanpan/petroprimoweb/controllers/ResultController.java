@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
-import ru.ramanpan.petroprimoweb.DTO.IdDTO;
 import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
 import ru.ramanpan.petroprimoweb.model.Result;
 import ru.ramanpan.petroprimoweb.service.ResultService;
@@ -12,8 +11,6 @@ import ru.ramanpan.petroprimoweb.service.TestService;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -30,8 +27,8 @@ public class ResultController {
     }
 
     @PostMapping("/upload")
-    public Integer uploadPicture(@RequestParam("file" ) MultipartFile file) throws IOException {
-        if(file!= null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+    public Integer uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
             String path = uploadPath + "/" + file.getOriginalFilename();
             System.out.println(path);
             file.transferTo(new File(path));
@@ -43,7 +40,7 @@ public class ResultController {
     public Long createResult(@RequestBody ResultDTO resultDTO) {
         Result result = new Result();
         result.setDescription(resultDTO.getDescription());
-        if(resultDTO.getPicture().equals(" ")) result.setPicture("plug.png");
+        if (resultDTO.getPicture().equals(" ")) result.setPicture("plug.png");
         else result.setPicture(resultDTO.getPicture());
         result.setHeader(resultDTO.getHeader());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
@@ -52,6 +49,7 @@ public class ResultController {
         result.setCorrectness(resultDTO.getCorrectness());
         return resultService.save(result);
     }
+
     @PostMapping("/update")
     public Long updateResult(@RequestBody ResultDTO resultDTO) {
         Result result = resultService.findById(resultDTO.getId());

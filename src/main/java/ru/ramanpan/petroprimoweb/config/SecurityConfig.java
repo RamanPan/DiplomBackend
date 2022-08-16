@@ -11,9 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.ramanpan.petroprimoweb.security.JwtConfigurer;
-import ru.ramanpan.petroprimoweb.security.JwtTokenFilter;
 
 @Configuration
 @EnableWebSecurity

@@ -1,15 +1,10 @@
 package ru.ramanpan.petroprimoweb.DTO;
 
 
-
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import ru.ramanpan.petroprimoweb.model.Test;
 
-import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @ToString

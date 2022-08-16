@@ -1,32 +1,33 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.DTO.UsersAnswersDTO;
 import ru.ramanpan.petroprimoweb.model.*;
-import ru.ramanpan.petroprimoweb.repository.*;
+import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
+import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
+import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
 import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 @Service
 public class UsersAnswersServiceImpl implements UsersAnswersService {
     private final UsersAnswersRepo usersAnswersRepo;
     private final AnswerRepo answerRepo;
     private final QuestionRepo questionRepo;
-    private boolean checkCorrectness(String answer,String correctAnswer) {
-        if(answer.isEmpty()) return false;
+
+    private boolean checkCorrectness(String answer, String correctAnswer) {
+        if (answer.isEmpty()) return false;
         int countEquals = 0, countUnequals = 0, minLength;
-        char[] ans = answer.replaceAll(" ","").toLowerCase(Locale.ROOT).toCharArray();
-        char[] corAns = correctAnswer.replaceAll(" ","").toLowerCase(Locale.ROOT).toCharArray();
+        char[] ans = answer.replaceAll(" ", "").toLowerCase(Locale.ROOT).toCharArray();
+        char[] corAns = correctAnswer.replaceAll(" ", "").toLowerCase(Locale.ROOT).toCharArray();
         countUnequals += Math.abs(ans.length - corAns.length);
         minLength = Math.min(ans.length, corAns.length);
-        for(int i = 0; i < minLength; ++i) {
-            if(ans[i] == corAns[i]) countEquals++;
-            else  countUnequals++;
+        for (int i = 0; i < minLength; ++i) {
+            if (ans[i] == corAns[i]) countEquals++;
+            else countUnequals++;
         }
 
 //        System.out.println(countEquals + " " + countUnequals);
@@ -55,8 +56,9 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
             }
             return correctness;
         }
-        return checkCorrectness(usersAnswers.getAnswer(),right.get(0).getStatement());
+        return checkCorrectness(usersAnswers.getAnswer(), right.get(0).getStatement());
     }
+
     @Override
     public List<UsersAnswers> findAll() {
         return usersAnswersRepo.findAll();
@@ -64,7 +66,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
 
     @Override
     public List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests) {
-        return usersAnswersRepo.findAllByUserAndTest(user,usersTests).orElse(null);
+        return usersAnswersRepo.findAllByUserAndTest(user, usersTests).orElse(null);
     }
 
     @Override

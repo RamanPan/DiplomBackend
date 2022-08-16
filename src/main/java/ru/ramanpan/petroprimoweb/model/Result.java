@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
 
 import javax.persistence.*;
 
@@ -15,7 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table
 public class Result extends BaseEntity {
-    @Column(length = 1000,nullable = false)
+    @Column(length = 1000, nullable = false)
     private String header;
 
     @Column(length = 1000)
@@ -29,8 +28,8 @@ public class Result extends BaseEntity {
 
     private Boolean correctness;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_id",nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "test_id", nullable = false)
     @ToString.Exclude
     private Test test;
 

@@ -1,9 +1,11 @@
 package ru.ramanpan.petroprimoweb.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.ramanpan.petroprimoweb.model.enums.Correctness;
-import ru.ramanpan.petroprimoweb.model.enums.TestStatus;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -14,24 +16,23 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Table
 @Entity(name = "users_tests")
-public class UsersTests extends BaseEntity{
+public class UsersTests extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "test_id",nullable = false)
+    @JoinColumn(name = "test_id", nullable = false)
     @ToString.Exclude
     private Test test;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false,length = 15)
+    @Column(nullable = false, length = 15)
     private Correctness correctness;
 
     private Double mark;
-
 
 
     @Override

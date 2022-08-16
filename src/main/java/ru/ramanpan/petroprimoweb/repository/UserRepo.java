@@ -6,7 +6,7 @@ import ru.ramanpan.petroprimoweb.model.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepo extends JpaRepository<User,Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findByNickname(String value);
 
     Optional<User> findByNicknameOrEmail(String username, String email);

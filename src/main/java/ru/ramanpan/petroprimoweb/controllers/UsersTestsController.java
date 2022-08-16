@@ -29,13 +29,15 @@ public class UsersTestsController {
         return usersTestsService.save(usersTests).getId();
 
     }
+
     @PostMapping("/setPassed")
     public UserResultDTO setPassed(@RequestBody UsersResultsDTO usersResultsDTO) {
         System.out.println(usersResultsDTO);
         UsersTests usersTests = usersTestsService.findById(usersResultsDTO.getUserTest());
-        return Mapping.toUserResultDTO(usersTestsService.setResultToTest(usersTests,usersResultsDTO));
+        return Mapping.toUserResultDTO(usersTestsService.setResultToTest(usersTests, usersResultsDTO));
 
     }
+
     @PostMapping("/setMark")
     public Long setMark(@RequestBody UsersTestsDTO dto) {
         UsersTests u = usersTestsService.findById(dto.getId());

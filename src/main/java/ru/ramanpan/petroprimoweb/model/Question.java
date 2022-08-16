@@ -31,13 +31,13 @@ public class Question {
     @Column(name = "date_register")
     private Date created;
 
-    @Column(length = 1000,nullable = false)
+    @Column(length = 1000, nullable = false)
     private String statement;
 
     private String picture;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 20,nullable = false)
+    @Column(length = 20, nullable = false)
     private QuestionType type;
 
     @Enumerated(value = EnumType.STRING)
@@ -48,12 +48,12 @@ public class Question {
     @Column(length = 20, nullable = false)
     private DifficultyQuestion difficult;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_id",nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "test_id", nullable = false)
     @ToString.Exclude
     private Test test;
 
-    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Answer> answers = new HashSet<>();
 

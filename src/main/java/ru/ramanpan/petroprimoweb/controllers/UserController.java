@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/upload")
     public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
-        if(file!= null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
             String path = uploadPath + "/" + file.getOriginalFilename();
             System.out.println(path);
             file.transferTo(new File(path));
@@ -47,10 +47,11 @@ public class UserController {
         userService.save(user);
         return ResponseEntity.ok();
     }
+
     @PostMapping("/getPicture")
-    public Map<String,String> getPicture(@RequestBody GetPictureDTO dto) {
-        Map<String,String> map = new HashMap<>();
-        map.put("picture",userService.findByNickname(dto.getAuthor()).getPicture());
+    public Map<String, String> getPicture(@RequestBody GetPictureDTO dto) {
+        Map<String, String> map = new HashMap<>();
+        map.put("picture", userService.findByNickname(dto.getAuthor()).getPicture());
         return map;
 
     }
@@ -61,18 +62,21 @@ public class UserController {
         user.setNickname(userDTO.getLogin());
         return userService.save(user).getNickname();
     }
+
     @PostMapping("/setEmail")
     public String setEmail(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
         user.setEmail(userDTO.getEmail());
         return userService.save(user).getEmail();
     }
+
     @PostMapping("/setFullname")
     public String setFullname(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
         user.setFullname(userDTO.getFullname());
         return userService.save(user).getFullname();
     }
+
     @PostMapping("/setPassword")
     public void setPassword(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
@@ -85,8 +89,6 @@ public class UserController {
         return ActualUserDTO.mapToDTO(userService.findById(userDTO.getId()));
 
     }
-
-
 
 
 }

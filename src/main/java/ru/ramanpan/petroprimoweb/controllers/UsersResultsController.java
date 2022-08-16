@@ -24,8 +24,6 @@ public class UsersResultsController {
     private final UsersTestsService usersTestsService;
 
 
-
-
     public UsersResultsController(UsersResultsService usersResultsService, UserService userService, ResultService resultService, UsersTestsService usersTestsService) {
         this.usersResultsService = usersResultsService;
         this.userService = userService;
@@ -38,15 +36,16 @@ public class UsersResultsController {
         List<UsersResults> usersResults = usersResultsService.findResultByUser(userService.findById(id.getId()));
         List<UserResultDTO> userResultDTOS = new ArrayList<>();
 
-        for(UsersResults u : usersResults) {
+        for (UsersResults u : usersResults) {
             userResultDTOS.add(Mapping.toUserResultDTO(u));
         }
 
         return userResultDTOS;
     }
+
     @PostMapping("/getResult")
     public UserResultDTO getResult(@RequestBody UsersResultsDTO dto) {
-        UsersResults userResult = usersResultsService.findResultByUserAndTest(userService.findById(dto.getUser()),usersTestsService.findById(dto.getUserTest()));
+        UsersResults userResult = usersResultsService.findResultByUserAndTest(userService.findById(dto.getUser()), usersTestsService.findById(dto.getUserTest()));
         return Mapping.toUserResultDTO(userResult);
     }
 

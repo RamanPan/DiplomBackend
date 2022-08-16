@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class UsersTestsServiceImpl implements UsersTestsService{
+public class UsersTestsServiceImpl implements UsersTestsService {
     private final UsersTestsRepo usersTestsRepo;
     private final UserRepo userRepo;
     private final TestRepo testRepo;
@@ -41,6 +41,7 @@ public class UsersTestsServiceImpl implements UsersTestsService{
     public UsersTests findById(Long id) {
         return usersTestsRepo.findById(id).orElse(null);
     }
+
     @Override
     public void deleteById(Long id) {
         usersTestsRepo.deleteById(id);
@@ -48,15 +49,19 @@ public class UsersTestsServiceImpl implements UsersTestsService{
 
     @Override
     public UsersTests setMark(UsersTests usersTests) {
-        Test t =usersTests.getTest();
-        t.setNumberPasses(t.getNumberPasses()+1);
+        Test t = usersTests.getTest();
+        t.setNumberPasses(t.getNumberPasses() + 1);
         List<UsersTests> usersTestsList = usersTestsRepo.findAllByTest(t).orElse(null);
         assert usersTestsList != null;
-        double markTest = usersTests.getMark(); int counter = 1;
-        for(UsersTests u : usersTestsList) {
-            if(u.getMark() != null && u.getMark() != 0) {markTest += u.getMark();++counter;}
+        double markTest = usersTests.getMark();
+        int counter = 1;
+        for (UsersTests u : usersTestsList) {
+            if (u.getMark() != null && u.getMark() != 0) {
+                markTest += u.getMark();
+                ++counter;
+            }
         }
-        t.setMark(markTest/counter);
+        t.setMark(markTest / counter);
         testRepo.save(t);
         return usersTestsRepo.save(usersTests);
     }
@@ -67,15 +72,16 @@ public class UsersTestsServiceImpl implements UsersTestsService{
         Test t = testRepo.findById(usersTests.getTest().getId()).orElse(null);
         User u = userRepo.findById(usersTests.getUser().getId()).orElse(null);
         assert t != null;
-        t.setNumberPasses(t.getNumberPasses()+1);
+        t.setNumberPasses(t.getNumberPasses() + 1);
         assert u != null;
-        u.setCountPassed(u.getCountPassed()+1);
+        u.setCountPassed(u.getCountPassed() + 1);
         usersResults.setCreated(new Date());
         usersTests.setCorrectness(Correctness.INCORRECT);
         usersResults.setUser(userRepo.findById(dto.getUser()).orElse(null));
-        usersResultsService.findResult(usersResults,usersTests);
+        usersResultsService.findResult(usersResults, usersTests);
         usersResults.setTest(usersTests);
-        if(usersTests.getCorrectness().equals(Correctness.CORRECT)) u.setCountPassedCorrect(u.getCountPassedCorrect() + 1);
+        if (usersTests.getCorrectness().equals(Correctness.CORRECT))
+            u.setCountPassedCorrect(u.getCountPassedCorrect() + 1);
         else u.setCountPassedIncorrect(u.getCountPassedIncorrect() + 1);
         userRepo.save(u);
         usersTestsRepo.save(usersTests);

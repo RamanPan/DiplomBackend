@@ -47,7 +47,7 @@ public class TestController {
 
     private Set<TestCardDTO> getSetTestCardDTO(List<Test> tests) {
         Set<TestCardDTO> cards = new HashSet<>();
-        for(Test t : tests) cards.add(modelMapper.map(t,TestCardDTO.class));
+        for (Test t : tests) cards.add(modelMapper.map(t, TestCardDTO.class));
         return cards;
 
     }
@@ -61,36 +61,34 @@ public class TestController {
         List<Question> economicQ = new ArrayList<>();
 
         for (Question q : actualTest) {
-            if(q.getDifficult().equals(DifficultyQuestion.EASY)) easyQ.add(q);
-            else if(q.getDifficult().equals(DifficultyQuestion.MEDIUM)) mediumQ.add(q);
-            else if(q.getDifficult().equals(DifficultyQuestion.HARD)) hardQ.add(q);
-            if(q.getCategory().equals(QuestionCategory.CULTURE)) cultureQ.add(q);
-            else if(q.getCategory().equals(QuestionCategory.POLITIC)) politicQ.add(q);
-            else if(q.getCategory().equals(QuestionCategory.ECONOMIC)) economicQ.add(q);
+            if (q.getDifficult().equals(DifficultyQuestion.EASY)) easyQ.add(q);
+            else if (q.getDifficult().equals(DifficultyQuestion.MEDIUM)) mediumQ.add(q);
+            else if (q.getDifficult().equals(DifficultyQuestion.HARD)) hardQ.add(q);
+            if (q.getCategory().equals(QuestionCategory.CULTURE)) cultureQ.add(q);
+            else if (q.getCategory().equals(QuestionCategory.POLITIC)) politicQ.add(q);
+            else if (q.getCategory().equals(QuestionCategory.ECONOMIC)) economicQ.add(q);
         }
-        actualTest = Switches.selectionOptionForDeterministic(test.getOptionForDeterministicType(),easyQ,mediumQ,hardQ,politicQ,cultureQ,economicQ);
+        actualTest = Switches.selectionOptionForDeterministic(test.getOptionForDeterministicType(), easyQ, mediumQ, hardQ, politicQ, cultureQ, economicQ);
     }
 
     private void actualTestWithRightDistribution() {
         List<Question> questionList = new ArrayList<>();
-        int quantityCulture, quantityPolitic,quantityEconomic,quantityQuestions = test.getNumberQuestions();
-        quantityCulture = (int)Math.ceil((double) test.getPercentCulture() * quantityQuestions / 100);
-        quantityPolitic = (int)Math.ceil((double) test.getPercentPolitic() * quantityQuestions / 100);
-        quantityEconomic = (int)Math.ceil((double) test.getPercentEconomic() * quantityQuestions / 100);
+        int quantityCulture, quantityPolitic, quantityEconomic, quantityQuestions = test.getNumberQuestions();
+        quantityCulture = (int) Math.ceil((double) test.getPercentCulture() * quantityQuestions / 100);
+        quantityPolitic = (int) Math.ceil((double) test.getPercentPolitic() * quantityQuestions / 100);
+        quantityEconomic = (int) Math.ceil((double) test.getPercentEconomic() * quantityQuestions / 100);
         int i = 0;
         for (Question q : actualTest) {
-            if(i == quantityQuestions) break;
-            if(q.getCategory().equals(QuestionCategory.POLITIC) && quantityPolitic != 0) {
+            if (i == quantityQuestions) break;
+            if (q.getCategory().equals(QuestionCategory.POLITIC) && quantityPolitic != 0) {
                 questionList.add(q);
                 quantityPolitic--;
                 i++;
-            }
-            else if(q.getCategory().equals(QuestionCategory.CULTURE) && quantityCulture != 0) {
+            } else if (q.getCategory().equals(QuestionCategory.CULTURE) && quantityCulture != 0) {
                 questionList.add(q);
                 quantityCulture--;
                 i++;
-            }
-            else if(q.getCategory().equals(QuestionCategory.ECONOMIC) && quantityEconomic != 0) {
+            } else if (q.getCategory().equals(QuestionCategory.ECONOMIC) && quantityEconomic != 0) {
                 questionList.add(q);
                 quantityEconomic--;
                 i++;
@@ -101,67 +99,68 @@ public class TestController {
     }
 
     private Question selectionQuestionForDynamicTest(int index, long idUserAnswer) {
-        Question q = null,lastQuestion,qE = null, qM = null, qH = null; String difficult = "";
-        if(removedQuestions.isEmpty()) {
-            if(passedSuccessfully > passedUnsuccessful) difficult = "HARD";
-            else if(passedSuccessfully < passedUnsuccessful) difficult = "EASY";
+        Question q = null, lastQuestion, qE = null, qM = null, qH = null;
+        String difficult = "";
+        if (removedQuestions.isEmpty()) {
+            if (passedSuccessfully > passedUnsuccessful) difficult = "HARD";
+            else if (passedSuccessfully < passedUnsuccessful) difficult = "EASY";
             else difficult = "MEDIUM";
-        }
-        else {
+        } else {
             UsersAnswers usersAnswers = usersAnswersService.findById(idUserAnswer);
-            lastQuestion = removedQuestions.get(index-1);
-            if(usersAnswers.getCorrect()) {
+            lastQuestion = removedQuestions.get(index - 1);
+            if (usersAnswers.getCorrect()) {
                 countCorrectNonStop++;
                 countIncorrectNonStop = 0;
-            }
-            else {
+            } else {
                 countIncorrectNonStop++;
                 countCorrectNonStop = 0;
             }
-            if(lastQuestion.getDifficult().equals(DifficultyQuestion.HARD)) {
-                if(countIncorrectNonStop > 1) {difficult = "MEDIUM";countIncorrectNonStop = 0;}
-                else difficult = "HARD";
-            }
-            else if(lastQuestion.getDifficult().equals(DifficultyQuestion.MEDIUM)) {
-                    if(countCorrectNonStop > 1) difficult = "HARD";
-                    else if(countIncorrectNonStop > 1) difficult = "EASY";
-                    else difficult = "MEDIUM";
-            }
-            else if(lastQuestion.getDifficult().equals(DifficultyQuestion.EASY)) {
-                if(countCorrectNonStop > 1) {difficult = "MEDIUM";countCorrectNonStop = 0;}
-                else difficult = "EASY";
+            if (lastQuestion.getDifficult().equals(DifficultyQuestion.HARD)) {
+                if (countIncorrectNonStop > 1) {
+                    difficult = "MEDIUM";
+                    countIncorrectNonStop = 0;
+                } else difficult = "HARD";
+            } else if (lastQuestion.getDifficult().equals(DifficultyQuestion.MEDIUM)) {
+                if (countCorrectNonStop > 1) difficult = "HARD";
+                else if (countIncorrectNonStop > 1) difficult = "EASY";
+                else difficult = "MEDIUM";
+            } else if (lastQuestion.getDifficult().equals(DifficultyQuestion.EASY)) {
+                if (countCorrectNonStop > 1) {
+                    difficult = "MEDIUM";
+                    countCorrectNonStop = 0;
+                } else difficult = "EASY";
             }
 
         }
-        for(Question quest : actualTest) {
-            if(quest.getDifficult().toString().equals(difficult)) {
+        for (Question quest : actualTest) {
+            if (quest.getDifficult().toString().equals(difficult)) {
                 q = quest;
                 break;
             }
-            if(quest.getDifficult().equals(DifficultyQuestion.EASY)) qE = quest;
-            else if(quest.getDifficult().equals(DifficultyQuestion.MEDIUM)) qM = quest;
+            if (quest.getDifficult().equals(DifficultyQuestion.EASY)) qE = quest;
+            else if (quest.getDifficult().equals(DifficultyQuestion.MEDIUM)) qM = quest;
             else qH = quest;
         }
-        if(q == null) {
-        switch (difficult) {
-            case "HARD" :
-                if(qH != null) q = qH;
-                else if(qM != null) q = qM;
-                else q = qE;
-                break;
-            case "MEDIUM" :
-                if(qM != null) q = qM;
-                else if(qH != null) q = qH;
-                else q = qE;
-                break;
-            case "EASY" :
-                if(qE != null) q = qE;
-                else if(qM != null) q = qM;
-                else q = qH;
-                break;
-            default:
-                q = actualTest.get(index);
-        }
+        if (q == null) {
+            switch (difficult) {
+                case "HARD":
+                    if (qH != null) q = qH;
+                    else if (qM != null) q = qM;
+                    else q = qE;
+                    break;
+                case "MEDIUM":
+                    if (qM != null) q = qM;
+                    else if (qH != null) q = qH;
+                    else q = qE;
+                    break;
+                case "EASY":
+                    if (qE != null) q = qE;
+                    else if (qM != null) q = qM;
+                    else q = qH;
+                    break;
+                default:
+                    q = actualTest.get(index);
+            }
         }
 
         removedQuestions.add(q);
@@ -171,8 +170,8 @@ public class TestController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file" )MultipartFile file) throws IOException {
-        if(file!= null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+    public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
             String path = uploadPath + "/" + file.getOriginalFilename();
             System.out.println(path);
             file.transferTo(new File(path));
@@ -190,29 +189,30 @@ public class TestController {
         test.setNumberPasses(0);
         test.setNumberQuestions(0);
         User u = userService.findByNickname(testDTO.getAuthor());
-        u.setCountCreated(u.getCountCreated()+1);
+        u.setCountCreated(u.getCountCreated() + 1);
         userService.update(u);
-        if(testDTO.getPicture().equals("")) test.setPicture("plug.png");
+        if (testDTO.getPicture().equals("")) test.setPicture("plug.png");
         else test.setPicture(testDTO.getPicture());
         String testType = testDTO.getTestType();
         test.setTestType(Switches.selectionTestType(testType));
-        if(test.getTestType().equals(TestType.DETERMINISTIC)) {
+        if (test.getTestType().equals(TestType.DETERMINISTIC)) {
             String option = testDTO.getOptionForDeterministicType();
             test.setOptionForDeterministicType(Switches.selectionOption(option));
         }
         return testService.save(test).getId();
     }
+
     @PostMapping("/update")
     public Long updateTest(@RequestBody TestDTO testDTO) {
         Test test = testService.findById(testDTO.getId());
         test.setName(testDTO.getName());
         test.setAuthor(testDTO.getAuthor());
         test.setDescription(testDTO.getDescription());
-        if(testDTO.getPicture().equals("")) test.setPicture("plug.png");
+        if (testDTO.getPicture().equals("")) test.setPicture("plug.png");
         else test.setPicture(testDTO.getPicture());
         String testType = testDTO.getTestType();
         test.setTestType(Switches.selectionTestType(testType));
-        if(test.getTestType().equals(TestType.DETERMINISTIC)) {
+        if (test.getTestType().equals(TestType.DETERMINISTIC)) {
             String option = testDTO.getOptionForDeterministicType();
             test.setOptionForDeterministicType(Switches.selectionOption(option));
         }
@@ -230,65 +230,69 @@ public class TestController {
         test = testService.findById(id.getId());
         actualTest = test.getQuestions();
         removedQuestions = new ArrayList<>();
-        countCorrectNonStop = 0; countIncorrectNonStop = 0;
+        countCorrectNonStop = 0;
+        countIncorrectNonStop = 0;
         passedSuccessfully = user.getCountPassedCorrect();
         passedUnsuccessful = user.getCountPassedIncorrect();
-        if(test.getPercentCulture() > -1) actualTestWithRightDistribution();
-        if(!test.getTestType().equals(TestType.DETERMINISTIC)) Collections.shuffle(actualTest);
+        if (test.getPercentCulture() > -1) actualTestWithRightDistribution();
+        if (!test.getTestType().equals(TestType.DETERMINISTIC)) Collections.shuffle(actualTest);
         else deterministicTest();
-        TestCardDTO testCardDTO = modelMapper.map(test,TestCardDTO.class);
+        TestCardDTO testCardDTO = modelMapper.map(test, TestCardDTO.class);
         testCardDTO.setIsDeterministic(false);
         return testCardDTO;
     }
+
     @PostMapping("/getTestForUpdate")
     public TestCardDTO getTestForUpdate(@RequestBody TestDTO id) {
         Test t = testService.findById(id.getId());
-        return Switches.testCardForUpdate(modelMapper.map(t,TestCardDTO.class),t);
+        return Switches.testCardForUpdate(modelMapper.map(t, TestCardDTO.class), t);
     }
-
 
 
     @PostMapping("/getQuestion")
     public QuestionDTO getQuestion(@RequestBody IdDTO idDTO) {
         Question q;
-        if(!test.getTestType().equals(TestType.DYNAMIC)) {
+        if (!test.getTestType().equals(TestType.DYNAMIC)) {
             q = actualTest.get(0);
             removedQuestions.add(q);
-            actualTest.remove(q);}
-        else q = selectionQuestionForDynamicTest((int) idDTO.getId(), idDTO.getIdUserAnswer());
+            actualTest.remove(q);
+        } else q = selectionQuestionForDynamicTest((int) idDTO.getId(), idDTO.getIdUserAnswer());
         System.out.println(q);
-        return modelMapper.map(q,QuestionDTO.class);
+        return modelMapper.map(q, QuestionDTO.class);
     }
+
     @PostMapping("/getQuestions")
     public List<QuestionDTO> getQuestions(@RequestBody IdDTO idDTO) {
         List<QuestionDTO> questions = new ArrayList<>();
         int i = 1;
         for (Question q : testService.findById(idDTO.getId()).getQuestions()) {
-            questions.add(Switches.questionForUpdate(modelMapper.map(q, QuestionDTO.class),q,i));
+            questions.add(Switches.questionForUpdate(modelMapper.map(q, QuestionDTO.class), q, i));
             i++;
         }
         return questions;
     }
+
     @PostMapping("/getResults")
     public List<ResultDTO> getResults(@RequestBody IdDTO idDTO) {
-        List<ResultDTO> results= new ArrayList<>();
+        List<ResultDTO> results = new ArrayList<>();
         int i = 1;
         for (Result r : testService.findById(idDTO.getId()).getResults()) {
-            results.add(Switches.resultForUpdate(modelMapper.map(r, ResultDTO.class),i));
+            results.add(Switches.resultForUpdate(modelMapper.map(r, ResultDTO.class), i));
             i++;
         }
         return results;
     }
+
     @PostMapping("/getPercents")
     public List<Integer> getPercents(@RequestBody IdDTO idDTO) {
-        List<Integer> percents= new ArrayList<>();
+        List<Integer> percents = new ArrayList<>();
         Test test = testService.findById(idDTO.getId());
         percents.add(test.getNumberQuestions());
-        if(test.getPercentPolitic() > -1) {
+        if (test.getPercentPolitic() > -1) {
             percents.add(test.getPercentCulture());
             percents.add(test.getPercentPolitic());
-            percents.add(test.getPercentEconomic());}
-        else {
+            percents.add(test.getPercentEconomic());
+        } else {
             percents.add(0);
             percents.add(0);
             percents.add(0);
@@ -297,25 +301,25 @@ public class TestController {
     }
 
 
-
-
-
     @GetMapping("/getOldTests")
     public Set<TestCardDTO> getOldTests() {
         return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getCreated)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
     @GetMapping("/getNewTests")
     public Set<TestCardDTO> getNewTests() {
         return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getCreated).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
     @GetMapping("/getBestTests")
     public Set<TestCardDTO> getBestTests() {
         return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getMark).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
     @PostMapping("/getFilterTests")
     public Set<TestCardDTO> getFilterTests(@RequestBody String filterType) {
         String type;
-        filterType = filterType.substring(1,filterType.length()-1);
+        filterType = filterType.substring(1, filterType.length() - 1);
         switch (filterType) {
             case "Стохастический":
                 type = TestType.STOCHASTIC.name();
@@ -331,6 +335,7 @@ public class TestController {
         }
         return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> testCardDTO.getTestType().equals(type)).filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
     }
+
     @PostMapping("/getByAuthor")
     public Set<TestCardDTO> getTestsByAuthor(@RequestBody TestDTO testDTO) {
         return getSetTestCardDTO(testService.findByAuthor(testDTO.getAuthor())).stream().filter(test1 -> !test1.getStatus().equals(Status.DELETED.name())).collect(Collectors.toCollection(LinkedHashSet::new));
@@ -342,11 +347,12 @@ public class TestController {
         testService.deleteById(deleteDTO.getId());
         return 1;
     }
+
     @PostMapping("/setNQ")
     public Long setNQ(@RequestBody IdDTO dto) {
         Test test = testService.findById(dto.getId());
         test.setNumberQuestions(test.getQuestions().size());
-        return  testService.update(test).getId();
+        return testService.update(test).getId();
     }
 
     @PostMapping("/setPercents")

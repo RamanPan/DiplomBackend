@@ -1,25 +1,25 @@
 package ru.ramanpan.petroprimoweb.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.Hibernate;
 import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.model.enums.TestType;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @Entity
 @Table(name = "tests")
-public class Test extends BaseEntity{
+public class Test extends BaseEntity {
     @Column(nullable = false)
     private String name;
     @Enumerated(value = EnumType.STRING)
@@ -52,14 +52,11 @@ public class Test extends BaseEntity{
 
     private String picture;
 
-//    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER,optional = false)
-//    @JoinColumn(nullable = false,name = "user_id")
-//    private User user;
 
-    @OneToMany(mappedBy = "test",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Result> results = new ArrayList<>();
 
-    @OneToMany(mappedBy = "test",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Question> questions = new ArrayList<>();
 
 

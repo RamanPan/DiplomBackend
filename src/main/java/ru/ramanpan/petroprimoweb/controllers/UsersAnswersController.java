@@ -22,8 +22,8 @@ public class UsersAnswersController {
     private final AnswerRepo answerService;
 
     private UserAnswerDTO toUserAnswerDTO(UsersAnswers usersAnswers) {
-        Question q =questionService.findById(usersAnswers.getQuestion().getId());
-        List<Answer> answers = answerService.findAllByQuestionAndCorrectness(q,true).orElse(null);
+        Question q = questionService.findById(usersAnswers.getQuestion().getId());
+        List<Answer> answers = answerService.findAllByQuestionAndCorrectness(q, true).orElse(null);
         List<String> textAnswers = new ArrayList<>();
         assert answers != null;
         for (Answer answer : answers) textAnswers.add(answer.getStatement());
@@ -54,15 +54,16 @@ public class UsersAnswersController {
         answer.setTest(usersTestsService.findById(answerDTO.getUserTest()));
         answer.setUser(userService.findById(answerDTO.getUser()));
         answer.setQuestion(questionService.findById(answerDTO.getQuestion()));
-        answer.setCorrect(usersAnswersService.isCorrect(answer,answerDTO));
+        answer.setCorrect(usersAnswersService.isCorrect(answer, answerDTO));
         return usersAnswersService.save(answer).getId();
 
     }
+
     @PostMapping("/getUserAnswers")
-    public List<UserAnswerDTO> getUserAnswers(@RequestBody UsersAnswersDTO dto ) {
+    public List<UserAnswerDTO> getUserAnswers(@RequestBody UsersAnswersDTO dto) {
         List<UserAnswerDTO> answerDTOS = new ArrayList<>();
-        List<UsersAnswers> usersAnswers = usersAnswersService.findAllByUserAndTest(userService.findById(dto.getUser()),usersTestsService.findById(dto.getUserTest()));
-        for(UsersAnswers u : usersAnswers) answerDTOS.add(toUserAnswerDTO(u));
+        List<UsersAnswers> usersAnswers = usersAnswersService.findAllByUserAndTest(userService.findById(dto.getUser()), usersTestsService.findById(dto.getUserTest()));
+        for (UsersAnswers u : usersAnswers) answerDTOS.add(toUserAnswerDTO(u));
         return answerDTOS;
     }
 
