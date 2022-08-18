@@ -1,5 +1,6 @@
 package ru.ramanpan.petroprimoweb.service;
 
+import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 
@@ -18,5 +19,5 @@ public interface QuestionService {
 
     Question findByStatement(String statement);
 
-    Long save(Question question);
+    Long save(QuestionDTO questionDTO);
 }

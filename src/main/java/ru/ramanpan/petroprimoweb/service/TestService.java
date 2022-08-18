@@ -1,6 +1,7 @@
 package ru.ramanpan.petroprimoweb.service;
 
 
+import ru.ramanpan.petroprimoweb.DTO.TestDTO;
 import ru.ramanpan.petroprimoweb.model.Test;
 
 import java.util.List;
@@ -14,9 +15,11 @@ public interface TestService {
 
     Test findByName(String name);
 
-    Test update(Test test);
+    Test update(TestDTO testDTO);
 
-    Test save(Test test);
+    Test specificUpdate(Test test);
+
+    Test save(TestDTO testDTO);
 
     List<Test> findByAuthor(String author);
 }

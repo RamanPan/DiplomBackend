@@ -1,6 +1,8 @@
 package ru.ramanpan.petroprimoweb.controllers;
 
 
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,22 +19,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usersResults")
+@AllArgsConstructor
 public class UsersResultsController {
     private final UsersResultsService usersResultsService;
     private final UserService userService;
-    private final ResultService resultService;
     private final UsersTestsService usersTestsService;
 
 
-    public UsersResultsController(UsersResultsService usersResultsService, UserService userService, ResultService resultService, UsersTestsService usersTestsService) {
-        this.usersResultsService = usersResultsService;
-        this.userService = userService;
-        this.resultService = resultService;
-        this.usersTestsService = usersTestsService;
-    }
-
     @PostMapping("/getResults")
-    public List<UserResultDTO> getResults(@RequestBody IdDTO id) {
+    public ResponseEntity<List<UserResultDTO>> getResults(@RequestBody IdDTO id) {
         List<UsersResults> usersResults = usersResultsService.findResultByUser(userService.findById(id.getId()));
         List<UserResultDTO> userResultDTOS = new ArrayList<>();
 
@@ -40,13 +35,13 @@ public class UsersResultsController {
             userResultDTOS.add(Mapping.toUserResultDTO(u));
         }
 
-        return userResultDTOS;
+        return ResponseEntity.ok(userResultDTOS);
     }
 
     @PostMapping("/getResult")
-    public UserResultDTO getResult(@RequestBody UsersResultsDTO dto) {
+    public ResponseEntity<UserResultDTO> getResult(@RequestBody UsersResultsDTO dto) {
         UsersResults userResult = usersResultsService.findResultByUserAndTest(userService.findById(dto.getUser()), usersTestsService.findById(dto.getUserTest()));
-        return Mapping.toUserResultDTO(userResult);
+        return ResponseEntity.ok(Mapping.toUserResultDTO(userResult));
     }
 
 

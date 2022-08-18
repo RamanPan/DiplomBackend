@@ -1,23 +1,27 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.ramanpan.petroprimoweb.DTO.TestDTO;
 import ru.ramanpan.petroprimoweb.model.Test;
+import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
+import ru.ramanpan.petroprimoweb.model.enums.TestType;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.TestService;
+import ru.ramanpan.petroprimoweb.service.UserService;
+import ru.ramanpan.petroprimoweb.util.Switches;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class TestServiceImpl implements TestService {
 
     private final TestRepo testRepo;
-
-    public TestServiceImpl(TestRepo testRepo) {
-        this.testRepo = testRepo;
-    }
+    private final UserService userService;
 
     @Override
     public List<Test> findAll() {
@@ -44,7 +48,25 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test update(Test test) {
+    public Test update(TestDTO testDTO) {
+        Test test = testRepo.findById(testDTO.getId()).orElse(null);
+        assert test != null;
+        test.setName(testDTO.getName());
+        test.setAuthor(testDTO.getAuthor());
+        test.setDescription(testDTO.getDescription());
+        if (testDTO.getPicture().equals("")) test.setPicture("plug.png");
+        else test.setPicture(testDTO.getPicture());
+        String testType = testDTO.getTestType();
+        test.setTestType(Switches.selectionTestType(testType));
+        if (test.getTestType().equals(TestType.DETERMINISTIC)) {
+            String option = testDTO.getOptionForDeterministicType();
+            test.setOptionForDeterministicType(Switches.selectionOption(option));
+        }
+        return testRepo.save(test);
+    }
+
+    @Override
+    public Test specificUpdate(Test test) {
         return testRepo.save(test);
     }
 
@@ -54,7 +76,25 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test save(Test test) {
+    public Test save(TestDTO testDTO) {
+        Test test = new Test();
+        test.setName(testDTO.getName());
+        test.setAuthor(testDTO.getAuthor());
+        test.setDescription(testDTO.getDescription());
+        test.setMark(0.0);
+        test.setNumberPasses(0);
+        test.setNumberQuestions(0);
+        User u = userService.findByNickname(testDTO.getAuthor());
+        u.setCountCreated(u.getCountCreated() + 1);
+        userService.update(u);
+        if (testDTO.getPicture().equals("")) test.setPicture("plug.png");
+        else test.setPicture(testDTO.getPicture());
+        String testType = testDTO.getTestType();
+        test.setTestType(Switches.selectionTestType(testType));
+        if (test.getTestType().equals(TestType.DETERMINISTIC)) {
+            String option = testDTO.getOptionForDeterministicType();
+            test.setOptionForDeterministicType(Switches.selectionOption(option));
+        }
         test.setCreated(new Date());
         test.setStatus(Status.ACTIVE);
         test.setPercentCulture(-1);
@@ -62,4 +102,5 @@ public class TestServiceImpl implements TestService {
         test.setPercentEconomic(-1);
         return testRepo.save(test);
     }
+
 }

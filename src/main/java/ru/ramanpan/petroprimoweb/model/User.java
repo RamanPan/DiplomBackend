@@ -2,6 +2,7 @@ package ru.ramanpan.petroprimoweb.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +17,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -60,11 +62,5 @@ public class User {
     private Integer countPassedIncorrect;
 
 
-    public User() {
-        this.id = 0L;
-    }
 
-    //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @ToString.Exclude
-//    private Set<Test> tests = new HashSet<>();
 }

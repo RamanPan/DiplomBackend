@@ -1,11 +1,14 @@
 package ru.ramanpan.petroprimoweb.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.*;
+import ru.ramanpan.petroprimoweb.DTO.ActualUserDTO;
+import ru.ramanpan.petroprimoweb.DTO.GetPictureDTO;
+import ru.ramanpan.petroprimoweb.DTO.UploadUserDTO;
 import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.service.UserService;
 
@@ -17,17 +20,13 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${upload.path.user}")
     private String uploadPath;
-
-    public UserController(UserService userService, BCryptPasswordEncoder encoder) {
-        this.userService = userService;
-        this.encoder = encoder;
-    }
 
 
     @PostMapping("/upload")
@@ -49,44 +48,45 @@ public class UserController {
     }
 
     @PostMapping("/getPicture")
-    public Map<String, String> getPicture(@RequestBody GetPictureDTO dto) {
+    public ResponseEntity<Map<String, String>> getPicture(@RequestBody GetPictureDTO dto) {
         Map<String, String> map = new HashMap<>();
         map.put("picture", userService.findByNickname(dto.getAuthor()).getPicture());
-        return map;
+        return ResponseEntity.ok(map);
 
     }
 
     @PostMapping("/setLogin")
-    public String setLogin(@RequestBody UploadUserDTO userDTO) {
+    public ResponseEntity<String> setLogin(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
         user.setNickname(userDTO.getLogin());
-        return userService.save(user).getNickname();
+        return ResponseEntity.ok(userService.save(user).getNickname());
     }
 
     @PostMapping("/setEmail")
-    public String setEmail(@RequestBody UploadUserDTO userDTO) {
+    public ResponseEntity<String> setEmail(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
         user.setEmail(userDTO.getEmail());
-        return userService.save(user).getEmail();
+        return ResponseEntity.ok(userService.save(user).getEmail());
     }
 
     @PostMapping("/setFullname")
-    public String setFullname(@RequestBody UploadUserDTO userDTO) {
+    public ResponseEntity<String> setFullname(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
         user.setFullname(userDTO.getFullname());
-        return userService.save(user).getFullname();
+        return ResponseEntity.ok(userService.save(user).getFullname());
     }
 
     @PostMapping("/setPassword")
-    public void setPassword(@RequestBody UploadUserDTO userDTO) {
+    public ResponseEntity.BodyBuilder setPassword(@RequestBody UploadUserDTO userDTO) {
         User user = userService.findById(userDTO.getId());
         user.setPassword(encoder.encode(userDTO.getPassword()));
         userService.save(user);
+        return ResponseEntity.ok();
     }
 
     @PostMapping("/actUser")
-    public ActualUserDTO getActualUser(@RequestBody UploadUserDTO userDTO) {
-        return ActualUserDTO.mapToDTO(userService.findById(userDTO.getId()));
+    public ResponseEntity<ActualUserDTO> getActualUser(@RequestBody UploadUserDTO userDTO) {
+        return ResponseEntity.ok(ActualUserDTO.mapToDTO(userService.findById(userDTO.getId())));
 
     }
 

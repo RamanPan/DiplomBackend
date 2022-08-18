@@ -1,6 +1,8 @@
 package ru.ramanpan.petroprimoweb.service;
 
+import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
+import ru.ramanpan.petroprimoweb.model.Question;
 
 import java.util.List;
 
@@ -15,5 +17,7 @@ public interface AnswerService {
 
     Answer findByStatement(String statement);
 
-    Long save(Answer answer);
+    List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness);
+
+    Long save(AnswerDTO answer);
 }

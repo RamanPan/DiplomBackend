@@ -1,5 +1,6 @@
 package ru.ramanpan.petroprimoweb.controllers;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,9 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/questions")
+@AllArgsConstructor
 public class QuestionController {
     private final QuestionService questionService;
-    private final TestService testService;
     private final ModelMapper modelMapper;
     @Value("${upload.path.question}")
     private String uploadPath;
@@ -45,12 +46,6 @@ public class QuestionController {
 
     }
 
-    public QuestionController(QuestionService questionService, TestService testService, ModelMapper modelMapper) {
-        this.questionService = questionService;
-        this.testService = testService;
-        this.modelMapper = modelMapper;
-    }
-
     @PostMapping("/upload")
     public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
@@ -62,39 +57,21 @@ public class QuestionController {
     }
 
     @PostMapping("/getAnswers")
-    public Set<AnswerDTO> getAnswers(@RequestBody IdDTO id) {
-        return getSetAnswerDTO(questionService.getAnswers(id.getId()));
+    public ResponseEntity<Set<AnswerDTO>> getAnswers(@RequestBody IdDTO id) {
+        return ResponseEntity.ok(getSetAnswerDTO(questionService.getAnswers(id.getId())));
     }
 
 
     @PostMapping("/create")
-    public Long createQuestion(@RequestBody QuestionDTO questionDTO) {
-        Question question = new Question();
-        System.out.println(questionDTO);
-        question.setStatement(questionDTO.getStatement());
-        if (questionDTO.getPicture().equals(" ")) question.setPicture("plug.png");
-        else question.setPicture(questionDTO.getPicture());
-        question.setTest(testService.findById(questionDTO.getTestLong()));
-        String questionType = questionDTO.getType();
-        String questionDifficult = questionDTO.getDifficult();
-        String questionCategory = questionDTO.getCategory();
-        if (questionType.equals("Закрытый")) question.setType(QuestionType.CLOSED);
-        else question.setType(QuestionType.OPEN);
-        if (questionDifficult.equals("Легкая")) question.setDifficult(DifficultyQuestion.EASY);
-        else if (questionDifficult.equals("Средняя")) question.setDifficult(DifficultyQuestion.MEDIUM);
-        else question.setDifficult(DifficultyQuestion.HARD);
-        if (questionCategory.equals("Политическая")) question.setCategory(QuestionCategory.POLITIC);
-        else if (questionCategory.equals("Экономическая")) question.setCategory(QuestionCategory.ECONOMIC);
-        else question.setCategory(QuestionCategory.CULTURE);
-        return questionService.save(question);
+    public ResponseEntity<Long> createQuestion(@RequestBody QuestionDTO questionDTO) {
+        return ResponseEntity.ok(questionService.save(questionDTO));
     }
 
     @Transactional
     @DeleteMapping("/delete")
-    public Integer deleteQuestion(@RequestBody DeleteDTO deleteDTO) {
-        System.out.println(deleteDTO);
+    public ResponseEntity.BodyBuilder deleteQuestion(@RequestBody DeleteDTO deleteDTO) {
         questionService.deleteById(deleteDTO.getId());
-        return 1;
+        return ResponseEntity.ok();
 
     }
 }

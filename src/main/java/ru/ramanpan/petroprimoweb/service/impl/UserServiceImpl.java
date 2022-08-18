@@ -3,7 +3,9 @@ package ru.ramanpan.petroprimoweb.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.ramanpan.petroprimoweb.DTO.RegistrationRequestDTO;
 import ru.ramanpan.petroprimoweb.model.User;
+import ru.ramanpan.petroprimoweb.model.enums.Role;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.repository.UserRepo;
 import ru.ramanpan.petroprimoweb.service.UserService;
@@ -28,21 +30,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void register(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
+    public void register(RegistrationRequestDTO request) {
+        User user = new User();
+        user.setNickname(request.getNickname());
+        user.setPassword(request.getPassword());
+        user.setEmail(request.getEmail());
+        user.setFullname(request.getFullname());
+        user.setCountPassed(0);
+        user.setCountCreated(0);
+        if (request.getRole().equals("Преподаватель")) user.setRole(Role.ROLE_PROFESSOR);
+        else user.setRole(Role.ROLE_STUDENT);
+        user.setPassword(encoder.encode(request.getPassword()));
         user.setCountPassedIncorrect(0);
         user.setCountPassedCorrect(0);
         user.setStatus(Status.ACTIVE);
         user.setPicture(" ");
         user.setDescription(" ");
         user.setCreated(new Date());
-        System.out.println(user);
         userRepo.save(user);
     }
 
     @Override
-    public User update(User user) {
-        return userRepo.save(user);
+    public void update(User user) {
+        userRepo.save(user);
     }
 
     @Override

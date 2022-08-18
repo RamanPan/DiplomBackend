@@ -1,11 +1,12 @@
 package ru.ramanpan.petroprimoweb.service;
 
+import ru.ramanpan.petroprimoweb.DTO.RegistrationRequestDTO;
 import ru.ramanpan.petroprimoweb.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    void register(User user);
+    void register(RegistrationRequestDTO request);
 
     List<User> getAll();
 
@@ -15,7 +16,7 @@ public interface UserService {
 
     void delete(Long id);
 
-    User update(User user);
+    void update(User user);
 
     User save(User user);
 

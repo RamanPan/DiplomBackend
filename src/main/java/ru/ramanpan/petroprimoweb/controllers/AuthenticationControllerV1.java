@@ -1,6 +1,7 @@
 package ru.ramanpan.petroprimoweb.controllers;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,28 +38,20 @@ public class AuthenticationControllerV1 {
     }
 
     @PostMapping("/login")
-    public ActualUserDTO authenticate(@RequestBody AuthenticationRequestDTO request) {
+    public ResponseEntity<ActualUserDTO> authenticate(@RequestBody AuthenticationRequestDTO request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
         User user = userService.findByNickname(request.getLogin());
         if (user == null) throw new UsernameNotFoundException("User doesn't exists");
         String token = provider.generateToken(request.getLogin(), user.getRole().name());
         System.out.println("auth");
-        return new ActualUserDTO(user.getId(), user.getCreated(), user.getNickname(), user.getFullname(), user.getEmail(), user.getRole().name(), user.getDescription(), user.getPicture(), user.getCountPassed(), user.getCountCreated(), token);
+        return ResponseEntity.ok(new ActualUserDTO(user.getId(), user.getCreated(), user.getNickname(), user.getFullname(), user.getEmail(), user.getRole().name(),
+                user.getDescription(), user.getPicture(), user.getCountPassed(), user.getCountCreated(), token));
     }
 
     @PostMapping("/register")
-    public Integer register(@RequestBody RegistrationRequestDTO request) {
-        User user = new User();
-        user.setNickname(request.getNickname());
-        user.setPassword(request.getPassword());
-        user.setEmail(request.getEmail());
-        user.setFullname(request.getFullname());
-        user.setCountPassed(0);
-        user.setCountCreated(0);
-        if (request.getRole().equals("Преподаватель")) user.setRole(Role.ROLE_PROFESSOR);
-        else user.setRole(Role.ROLE_STUDENT);
-        userService.register(user);
-        return 1;
+    public ResponseEntity<Integer> register(@RequestBody RegistrationRequestDTO request) {
+        userService.register(request);
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/changePassword")
@@ -69,13 +62,6 @@ public class AuthenticationControllerV1 {
         return userService.changePassword(user);
     }
 
-    @RequestMapping("/logout")
-    public Integer logout(HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request, response, null);
-        System.out.println("exit");
-        return 1;
-    }
 
 }
 

@@ -1,22 +1,29 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.DTO.UsersAnswersDTO;
 import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
+import ru.ramanpan.petroprimoweb.service.UserService;
 import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
+import ru.ramanpan.petroprimoweb.service.UsersTestsService;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 @Service
+@AllArgsConstructor
 public class UsersAnswersServiceImpl implements UsersAnswersService {
     private final UsersAnswersRepo usersAnswersRepo;
     private final AnswerRepo answerRepo;
     private final QuestionRepo questionRepo;
+    private final UsersTestsService usersTestsService;
+    private final UserService userService;
+
 
     private boolean checkCorrectness(String answer, String correctAnswer) {
         if (answer.isEmpty()) return false;
@@ -29,15 +36,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
             if (ans[i] == corAns[i]) countEquals++;
             else countUnequals++;
         }
-
-//        System.out.println(countEquals + " " + countUnequals);
         return countEquals > countUnequals;
-    }
-
-    public UsersAnswersServiceImpl(UsersAnswersRepo usersAnswersRepo, AnswerRepo answerRepo, QuestionRepo questionRepo) {
-        this.usersAnswersRepo = usersAnswersRepo;
-        this.answerRepo = answerRepo;
-        this.questionRepo = questionRepo;
     }
 
     @Override
@@ -80,8 +79,14 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     }
 
     @Override
-    public UsersAnswers save(UsersAnswers usersAnswers) {
-        usersAnswers.setCreated(new Date());
-        return usersAnswersRepo.save(usersAnswers);
+    public UsersAnswers save(UsersAnswersDTO usersAnswersDTO) {
+        UsersAnswers answer = new UsersAnswers();
+        answer.setAnswer(usersAnswersDTO.getAnswer());
+        answer.setTest(usersTestsService.findById(usersAnswersDTO.getUserTest()));
+        answer.setUser(userService.findById(usersAnswersDTO.getUser()));
+        answer.setQuestion(questionRepo.findById(usersAnswersDTO.getQuestion()).orElse(null));
+        answer.setCorrect(isCorrect(answer, usersAnswersDTO));
+        answer.setCreated(new Date());
+        return usersAnswersRepo.save(answer);
     }
 }

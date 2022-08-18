@@ -25,7 +25,6 @@ public abstract class BaseEntity {
     @Column(name = "date_register")
     private Date created;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

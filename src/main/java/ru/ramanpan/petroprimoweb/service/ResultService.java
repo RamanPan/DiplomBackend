@@ -1,5 +1,6 @@
 package ru.ramanpan.petroprimoweb.service;
 
+import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
 import ru.ramanpan.petroprimoweb.model.Result;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface ResultService {
 
     Result findByHeader(String header);
 
-    Long save(Result result);
+    Long save(ResultDTO resultDTO);
 
-    Long update(Result result);
+    Long update(ResultDTO resultDTO);
 }

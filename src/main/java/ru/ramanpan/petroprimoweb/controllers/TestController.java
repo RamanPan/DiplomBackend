@@ -181,42 +181,12 @@ public class TestController {
 
     @PostMapping("/create")
     public Long createTest(@RequestBody TestDTO testDTO) {
-        Test test = new Test();
-        test.setName(testDTO.getName());
-        test.setAuthor(testDTO.getAuthor());
-        test.setDescription(testDTO.getDescription());
-        test.setMark(0.0);
-        test.setNumberPasses(0);
-        test.setNumberQuestions(0);
-        User u = userService.findByNickname(testDTO.getAuthor());
-        u.setCountCreated(u.getCountCreated() + 1);
-        userService.update(u);
-        if (testDTO.getPicture().equals("")) test.setPicture("plug.png");
-        else test.setPicture(testDTO.getPicture());
-        String testType = testDTO.getTestType();
-        test.setTestType(Switches.selectionTestType(testType));
-        if (test.getTestType().equals(TestType.DETERMINISTIC)) {
-            String option = testDTO.getOptionForDeterministicType();
-            test.setOptionForDeterministicType(Switches.selectionOption(option));
-        }
-        return testService.save(test).getId();
+        return testService.save(testDTO).getId();
     }
 
     @PostMapping("/update")
     public Long updateTest(@RequestBody TestDTO testDTO) {
-        Test test = testService.findById(testDTO.getId());
-        test.setName(testDTO.getName());
-        test.setAuthor(testDTO.getAuthor());
-        test.setDescription(testDTO.getDescription());
-        if (testDTO.getPicture().equals("")) test.setPicture("plug.png");
-        else test.setPicture(testDTO.getPicture());
-        String testType = testDTO.getTestType();
-        test.setTestType(Switches.selectionTestType(testType));
-        if (test.getTestType().equals(TestType.DETERMINISTIC)) {
-            String option = testDTO.getOptionForDeterministicType();
-            test.setOptionForDeterministicType(Switches.selectionOption(option));
-        }
-        return testService.update(test).getId();
+        return testService.update(testDTO).getId();
     }
 
     @GetMapping("/getTests")
@@ -343,33 +313,33 @@ public class TestController {
 
 
     @DeleteMapping("/delete")
-    public int deleteTest(@RequestBody DeleteDTO deleteDTO) {
+    public ResponseEntity.BodyBuilder deleteTest(@RequestBody DeleteDTO deleteDTO) {
         testService.deleteById(deleteDTO.getId());
-        return 1;
+        return ResponseEntity.ok();
     }
 
     @PostMapping("/setNQ")
-    public Long setNQ(@RequestBody IdDTO dto) {
+    public ResponseEntity<Long> setNQ(@RequestBody IdDTO dto) {
         Test test = testService.findById(dto.getId());
         test.setNumberQuestions(test.getQuestions().size());
-        return testService.update(test).getId();
+        return ResponseEntity.ok(testService.specificUpdate(test).getId());
     }
 
     @PostMapping("/setPercents")
-    public Long setPercentsQuestions(@RequestBody TestDTO dto) {
+    public ResponseEntity<Long> setPercentsQuestions(@RequestBody TestDTO dto) {
         Test test = testService.findById(dto.getId());
         test.setPercentCulture(dto.getPercentCulture());
         test.setPercentEconomic(dto.getPercentEconomic());
         test.setPercentPolitic(dto.getPercentPolitic());
         test.setNumberQuestions(Integer.valueOf(dto.getNumberQuestions()));
-        return testService.update(test).getId();
+        return ResponseEntity.ok(testService.specificUpdate(test).getId());
     }
 
     @PostMapping("/setNumberPasses")
-    public Integer setNumberPasses(@RequestBody TestDTO testDTO) {
+    public ResponseEntity<Integer> setNumberPasses(@RequestBody TestDTO testDTO) {
         Test test = testService.findById(testDTO.getId());
         test.setNumberPasses(testDTO.getNumberPasses());
-        return testService.save(test).getNumberPasses();
+        return ResponseEntity.ok(testService.specificUpdate(test).getNumberPasses());
     }
 
 }

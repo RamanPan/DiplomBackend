@@ -2,6 +2,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
@@ -39,6 +40,11 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
+    public List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness) {
+        return answerRepo.findAllByQuestionAndCorrectness(question, correctness).orElse(null);
+    }
+
+    @Override
     public void deleteById(Long id) {
         answerRepo.delete(findById(id));
     }
@@ -49,7 +55,11 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Long save(Answer answer) {
+    public Long save(AnswerDTO answerDTO) {
+        Answer answer = new Answer();
+        answer.setCorrectness(answerDTO.getCorrectness());
+        answer.setStatement(answerDTO.getStatement());
+        answer.setQuestion(questionRepo.findById(answerDTO.getQuestionLong()).orElse(null));
         answer.setCreated(new Date());
         return answerRepo.save(answer).getId();
     }

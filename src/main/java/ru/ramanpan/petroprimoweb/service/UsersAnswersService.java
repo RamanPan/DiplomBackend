@@ -16,7 +16,7 @@ public interface UsersAnswersService {
 
     boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO);
 
-    UsersAnswers save(UsersAnswers usersAnswers);
+    UsersAnswers save(UsersAnswersDTO usersAnswersDTO);
 
     List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests);
 }
