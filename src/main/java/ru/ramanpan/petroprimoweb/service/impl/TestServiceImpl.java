@@ -4,6 +4,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.DTO.TestDTO;
+import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
@@ -30,27 +31,24 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test findById(Long id) {
-        return testRepo.findById(id).orElse(null);
+        return testRepo.findById(id).orElseThrow(() -> new NotFoundException("Test not found"));
     }
 
     @Override
     public void deleteById(Long id) {
-        Test t = testRepo.findById(id).orElse(null);
-        System.out.println(t);
-        assert t != null;
+        Test t = testRepo.findById(id).orElseThrow(() -> new NotFoundException("Test not found"));
         t.setStatus(Status.DELETED);
         testRepo.save(t);
     }
 
     @Override
     public List<Test> findByAuthor(String author) {
-        return testRepo.findAllByAuthor(author).orElse(null);
+        return testRepo.findAllByAuthor(author).orElseThrow(() -> new NotFoundException("Tests not found"));
     }
 
     @Override
     public Test update(TestDTO testDTO) {
-        Test test = testRepo.findById(testDTO.getId()).orElse(null);
-        assert test != null;
+        Test test = testRepo.findById(testDTO.getId()).orElseThrow(() -> new NotFoundException("Test not found"));
         test.setName(testDTO.getName());
         test.setAuthor(testDTO.getAuthor());
         test.setDescription(testDTO.getDescription());
@@ -72,7 +70,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test findByName(String name) {
-        return testRepo.findByName(name).orElse(null);
+        return testRepo.findByName(name).orElseThrow(() -> new NotFoundException("Test not found"));
     }
 
     @Override

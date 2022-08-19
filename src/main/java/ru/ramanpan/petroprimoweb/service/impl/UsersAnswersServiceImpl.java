@@ -3,6 +3,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.DTO.UsersAnswersDTO;
+import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
@@ -42,10 +43,8 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     @Override
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
-        Question q = questionRepo.findById(answerDTO.getQuestion()).orElse(null);
-        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true).orElse(null);
-        assert right != null;
-        assert q != null;
+        Question q = questionRepo.findById(answerDTO.getQuestion()).orElseThrow(() -> new NotFoundException("Question was not found"));
+        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true).orElseThrow(() -> new NotFoundException("Answers was not found"));
         if (!q.getType().toString().equals("OPEN")) {
             for (Answer r : right) {
                 if (usersAnswers.getAnswer().equals(r.getStatement())) {
@@ -65,12 +64,12 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
 
     @Override
     public List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests) {
-        return usersAnswersRepo.findAllByUserAndTest(user, usersTests).orElse(null);
+        return usersAnswersRepo.findAllByUserAndTest(user, usersTests).orElseThrow(() -> new NotFoundException("User answers not found"));
     }
 
     @Override
     public UsersAnswers findById(Long id) {
-        return usersAnswersRepo.findById(id).orElse(null);
+        return usersAnswersRepo.findById(id).orElseThrow(() -> new NotFoundException("User answer not found"));
     }
 
     @Override
@@ -84,7 +83,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
         answer.setAnswer(usersAnswersDTO.getAnswer());
         answer.setTest(usersTestsService.findById(usersAnswersDTO.getUserTest()));
         answer.setUser(userService.findById(usersAnswersDTO.getUser()));
-        answer.setQuestion(questionRepo.findById(usersAnswersDTO.getQuestion()).orElse(null));
+        answer.setQuestion(questionRepo.findById(usersAnswersDTO.getQuestion()).orElseThrow(() -> new NotFoundException("Question not found")));
         answer.setCorrect(isCorrect(answer, usersAnswersDTO));
         answer.setCreated(new Date());
         return usersAnswersRepo.save(answer);

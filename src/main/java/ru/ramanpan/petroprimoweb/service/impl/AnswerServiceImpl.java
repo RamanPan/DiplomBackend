@@ -1,8 +1,10 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
+import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
@@ -13,15 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
+@AllArgsConstructor
 public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepo answerRepo;
     private final QuestionRepo questionRepo;
 
-    public AnswerServiceImpl(AnswerRepo answerRepo, QuestionRepo questionRepo) {
-        this.answerRepo = answerRepo;
-        this.questionRepo = questionRepo;
-    }
 
     @Override
     public List<Answer> findAll() {
@@ -30,18 +28,18 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Answer findById(Long id) {
-        return answerRepo.findById(id).orElse(null);
+        return answerRepo.findById(id).orElseThrow(() -> new NotFoundException("Answer not found"));
     }
 
     @Override
     public List<Answer> findAllByQuestionId(Long question_id) {
         Question question = questionRepo.getById(question_id);
-        return answerRepo.findAllByQuestion(question).orElse(null);
+        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException("Answers not found"));
     }
 
     @Override
     public List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness) {
-        return answerRepo.findAllByQuestionAndCorrectness(question, correctness).orElse(null);
+        return answerRepo.findAllByQuestionAndCorrectness(question, correctness).orElseThrow(() -> new NotFoundException("Answers not found"));
     }
 
     @Override
@@ -51,7 +49,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Answer findByStatement(String statement) {
-        return answerRepo.findByStatement(statement).orElse(null);
+        return answerRepo.findByStatement(statement).orElseThrow(() -> new NotFoundException("Answer not found"));
     }
 
     @Override
@@ -59,7 +57,7 @@ public class AnswerServiceImpl implements AnswerService {
         Answer answer = new Answer();
         answer.setCorrectness(answerDTO.getCorrectness());
         answer.setStatement(answerDTO.getStatement());
-        answer.setQuestion(questionRepo.findById(answerDTO.getQuestionLong()).orElse(null));
+        answer.setQuestion(questionRepo.findById(answerDTO.getQuestionLong()).orElseThrow(() -> new NotFoundException("Answer not found")));
         answer.setCreated(new Date());
         return answerRepo.save(answer).getId();
     }

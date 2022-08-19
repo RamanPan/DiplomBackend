@@ -1,9 +1,10 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.DTO.RegistrationRequestDTO;
+import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.model.enums.Role;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
@@ -14,15 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final BCryptPasswordEncoder encoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepo userRepo, BCryptPasswordEncoder encoder) {
-        this.userRepo = userRepo;
-        this.encoder = encoder;
-    }
 
     @Override
     public User save(User user) {
@@ -68,12 +65,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByNickname(String username) {
-        return userRepo.findByNickname(username).orElse(null);
+        return userRepo.findByNickname(username).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
     public User findById(Long id) {
-        return userRepo.findById(id).orElse(null);
+        return userRepo.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override

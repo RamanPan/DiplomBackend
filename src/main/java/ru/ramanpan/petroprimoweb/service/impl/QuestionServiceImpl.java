@@ -1,8 +1,10 @@
 package ru.ramanpan.petroprimoweb.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
+import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.Test;
@@ -18,18 +20,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
+@AllArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepo questionRepo;
     private final TestRepo testRepo;
     private final AnswerRepo answerRepo;
 
-    public QuestionServiceImpl(QuestionRepo questionRepo, TestRepo testRepo, AnswerRepo answerRepo) {
-
-        this.questionRepo = questionRepo;
-        this.testRepo = testRepo;
-        this.answerRepo = answerRepo;
-    }
 
     @Override
     public List<Question> findAll() {
@@ -38,20 +34,19 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question findById(Long id) {
-        return questionRepo.findById(id).orElse(null);
+        return questionRepo.findById(id).orElseThrow(() -> new NotFoundException("Question not found"));
     }
 
     @Override
     public List<Question> findAllByTestId(Long test_id) {
         Test test = testRepo.getById(test_id);
-        return questionRepo.findAllByTest(test).orElse(null);
+        return questionRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException("Questions not found"));
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
         Question question = findById(id);
-        System.out.println("here");
         answerRepo.deleteAllByQuestion(question);
         questionRepo.deleteById(id);
     }
@@ -59,22 +54,21 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Answer> getAnswers(Long id) {
         Question question = findById(id);
-        return answerRepo.findAllByQuestion(question).orElse(null);
+        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException("Answers not found"));
     }
 
     @Override
     public Question findByStatement(String statement) {
-        return questionRepo.findByStatement(statement).orElse(null);
+        return questionRepo.findByStatement(statement).orElseThrow(() -> new NotFoundException("Question not found"));
     }
 
     @Override
     public Long save(QuestionDTO questionDTO) {
         Question question = new Question();
-        System.out.println(questionDTO);
         question.setStatement(questionDTO.getStatement());
         if (questionDTO.getPicture().equals(" ")) question.setPicture("plug.png");
         else question.setPicture(questionDTO.getPicture());
-        question.setTest(testRepo.findById(questionDTO.getTestLong()).orElse(null));
+        question.setTest(testRepo.findById(questionDTO.getTestLong()).orElseThrow(() -> new NotFoundException("Test not found")));
         String questionType = questionDTO.getType();
         String questionDifficult = questionDTO.getDifficult();
         String questionCategory = questionDTO.getCategory();
