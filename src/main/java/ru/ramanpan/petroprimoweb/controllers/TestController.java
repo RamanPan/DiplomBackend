@@ -14,6 +14,7 @@ import ru.ramanpan.petroprimoweb.model.enums.TestType;
 import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.service.UserService;
 import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 import ru.ramanpan.petroprimoweb.util.Switches;
 
 import java.io.File;
@@ -95,20 +96,19 @@ public class TestController {
             }
         }
         actualTest = questionList;
-        System.out.println(actualTest.size());
     }
 
     private Question selectionQuestionForDynamicTest(int index, long idUserAnswer) {
         Question q = null, lastQuestion, qE = null, qM = null, qH = null;
         String difficult = "";
         if (removedQuestions.isEmpty()) {
-            if (passedSuccessfully > passedUnsuccessful) difficult = "HARD";
-            else if (passedSuccessfully < passedUnsuccessful) difficult = "EASY";
-            else difficult = "MEDIUM";
+            if (passedSuccessfully > passedUnsuccessful) difficult = Constants.HARD;
+            else if (passedSuccessfully < passedUnsuccessful) difficult = Constants.EASY;
+            else difficult = Constants.MEDIUM;
         } else {
             UsersAnswers usersAnswers = usersAnswersService.findById(idUserAnswer);
             lastQuestion = removedQuestions.get(index - 1);
-            if (usersAnswers.getCorrect()) {
+            if (Boolean.TRUE.equals(usersAnswers.getCorrect())) {
                 countCorrectNonStop++;
                 countIncorrectNonStop = 0;
             } else {
@@ -117,18 +117,18 @@ public class TestController {
             }
             if (lastQuestion.getDifficult().equals(DifficultyQuestion.HARD)) {
                 if (countIncorrectNonStop > 1) {
-                    difficult = "MEDIUM";
+                    difficult = Constants.MEDIUM;
                     countIncorrectNonStop = 0;
-                } else difficult = "HARD";
+                } else difficult = Constants.HARD;
             } else if (lastQuestion.getDifficult().equals(DifficultyQuestion.MEDIUM)) {
-                if (countCorrectNonStop > 1) difficult = "HARD";
-                else if (countIncorrectNonStop > 1) difficult = "EASY";
-                else difficult = "MEDIUM";
+                if (countCorrectNonStop > 1) difficult = Constants.HARD;
+                else if (countIncorrectNonStop > 1) difficult = Constants.EASY;
+                else difficult = Constants.MEDIUM;
             } else if (lastQuestion.getDifficult().equals(DifficultyQuestion.EASY)) {
                 if (countCorrectNonStop > 1) {
-                    difficult = "MEDIUM";
+                    difficult = Constants.MEDIUM;
                     countCorrectNonStop = 0;
-                } else difficult = "EASY";
+                } else difficult = Constants.EASY;
             }
 
         }
@@ -143,17 +143,17 @@ public class TestController {
         }
         if (q == null) {
             switch (difficult) {
-                case "HARD":
+                case Constants.HARD:
                     if (qH != null) q = qH;
                     else if (qM != null) q = qM;
                     else q = qE;
                     break;
-                case "MEDIUM":
+                case Constants.MEDIUM:
                     if (qM != null) q = qM;
                     else if (qH != null) q = qH;
                     else q = qE;
                     break;
-                case "EASY":
+                case Constants.EASY:
                     if (qE != null) q = qE;
                     else if (qM != null) q = qM;
                     else q = qH;
@@ -172,8 +172,7 @@ public class TestController {
     @PostMapping("/upload")
     public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            String path = uploadPath + "/" + file.getOriginalFilename();
-            System.out.println(path);
+            String path = String.format("%s/%s", uploadPath, file.getOriginalFilename());
             file.transferTo(new File(path));
         }
         return ResponseEntity.ok();
@@ -191,7 +190,7 @@ public class TestController {
 
     @GetMapping("/getTests")
     public Set<TestCardDTO> getTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !"DELETED".equals(testCardDTO.getStatus())).collect(Collectors.toCollection(HashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !Constants.DELETED.equals(testCardDTO.getStatus())).collect(Collectors.toCollection(HashSet::new));
     }
 
     @PostMapping("/getTest")
@@ -227,7 +226,6 @@ public class TestController {
             removedQuestions.add(q);
             actualTest.remove(q);
         } else q = selectionQuestionForDynamicTest((int) idDTO.getId(), idDTO.getIdUserAnswer());
-        System.out.println(q);
         return modelMapper.map(q, QuestionDTO.class);
     }
 
@@ -256,12 +254,12 @@ public class TestController {
     @PostMapping("/getPercents")
     public List<Integer> getPercents(@RequestBody IdDTO idDTO) {
         List<Integer> percents = new ArrayList<>();
-        Test test = testService.findById(idDTO.getId());
-        percents.add(test.getNumberQuestions());
-        if (test.getPercentPolitic() > -1) {
-            percents.add(test.getPercentCulture());
-            percents.add(test.getPercentPolitic());
-            percents.add(test.getPercentEconomic());
+        Test testFind = testService.findById(idDTO.getId());
+        percents.add(testFind.getNumberQuestions());
+        if (testFind.getPercentPolitic() > -1) {
+            percents.add(testFind.getPercentCulture());
+            percents.add(testFind.getPercentPolitic());
+            percents.add(testFind.getPercentEconomic());
         } else {
             percents.add(0);
             percents.add(0);
@@ -273,17 +271,17 @@ public class TestController {
 
     @GetMapping("/getOldTests")
     public Set<TestCardDTO> getOldTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getCreated)).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals(Constants.DELETED)).sorted(Comparator.comparing(TestCardDTO::getCreated)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @GetMapping("/getNewTests")
     public Set<TestCardDTO> getNewTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getCreated).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals(Constants.DELETED)).sorted(Comparator.comparing(TestCardDTO::getCreated).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @GetMapping("/getBestTests")
     public Set<TestCardDTO> getBestTests() {
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).sorted(Comparator.comparing(TestCardDTO::getMark).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals(Constants.DELETED)).sorted(Comparator.comparing(TestCardDTO::getMark).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @PostMapping("/getFilterTests")
@@ -301,9 +299,9 @@ public class TestController {
                 type = TestType.DETERMINISTIC.name();
                 break;
             default:
-                return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
+                return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> !testCardDTO.getStatus().equals(Constants.DELETED)).collect(Collectors.toCollection(LinkedHashSet::new));
         }
-        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> testCardDTO.getTestType().equals(type)).filter(testCardDTO -> !testCardDTO.getStatus().equals("DELETED")).collect(Collectors.toCollection(LinkedHashSet::new));
+        return getSetTestCardDTO(testService.findAll()).stream().filter(testCardDTO -> testCardDTO.getTestType().equals(type)).filter(testCardDTO -> !testCardDTO.getStatus().equals(Constants.DELETED)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @PostMapping("/getByAuthor")

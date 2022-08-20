@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface TestRepo extends JpaRepository<Test, Long> {
     Optional<Test> findByName(String name);
 
-    Optional<List<Test>> findAllByAuthor(String author);
+    List<Test> findAllByAuthor(String author);
 }

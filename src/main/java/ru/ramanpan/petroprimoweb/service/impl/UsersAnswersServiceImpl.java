@@ -47,7 +47,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
         Question q = questionRepo.findById(answerDTO.getQuestion()).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
-        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
+        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true);
         if (!q.getType().toString().equals("OPEN")) {
             for (Answer r : right) {
                 if (usersAnswers.getAnswer().equals(r.getStatement())) {
@@ -67,7 +67,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
 
     @Override
     public List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests) {
-        return usersAnswersRepo.findAllByUserAndTest(user, usersTests).orElseThrow(() -> new NotFoundException(Constants.USER_ANSWER_NOT_FOUND));
+        return usersAnswersRepo.findAllByUserAndTest(user, usersTests);
     }
 
     @Override

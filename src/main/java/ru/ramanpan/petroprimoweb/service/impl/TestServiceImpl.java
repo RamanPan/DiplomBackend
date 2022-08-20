@@ -44,7 +44,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public List<Test> findByAuthor(String author) {
-        return testRepo.findAllByAuthor(author).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
+        return testRepo.findAllByAuthor(author);
     }
 
     @Override

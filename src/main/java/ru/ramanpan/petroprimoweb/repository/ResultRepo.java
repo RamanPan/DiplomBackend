@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ResultRepo extends JpaRepository<Result, Long> {
-    Optional<List<Result>> findAllByTest(Test test);
+    List<Result> findAllByTest(Test test);
 
     Optional<Result> findByDescription(String description);
 

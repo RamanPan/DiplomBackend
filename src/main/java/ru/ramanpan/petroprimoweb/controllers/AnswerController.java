@@ -5,9 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
-import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.service.AnswerService;
-import ru.ramanpan.petroprimoweb.service.QuestionService;
 
 @RestController
 @RequestMapping("/api/answers")

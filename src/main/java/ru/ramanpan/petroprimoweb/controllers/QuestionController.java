@@ -1,20 +1,18 @@
 package ru.ramanpan.petroprimoweb.controllers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.*;
+import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
+import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
+import ru.ramanpan.petroprimoweb.DTO.IdDTO;
+import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
-import ru.ramanpan.petroprimoweb.model.Question;
-import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
-import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
-import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
-import ru.ramanpan.petroprimoweb.service.TestService;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +23,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/questions")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class QuestionController {
     private final QuestionService questionService;
     private final ModelMapper modelMapper;
@@ -49,8 +47,7 @@ public class QuestionController {
     @PostMapping("/upload")
     public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            String path = uploadPath + "/" + file.getOriginalFilename();
-            System.out.println(path);
+            String path = String.format("%s/%s", uploadPath, file.getOriginalFilename());
             file.transferTo(new File(path));
         }
         return ResponseEntity.ok();

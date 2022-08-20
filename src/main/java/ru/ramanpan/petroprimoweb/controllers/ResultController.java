@@ -1,22 +1,20 @@
 package ru.ramanpan.petroprimoweb.controllers;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
 import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
-import ru.ramanpan.petroprimoweb.model.Result;
 import ru.ramanpan.petroprimoweb.service.ResultService;
-import ru.ramanpan.petroprimoweb.service.TestService;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/results")
 public class ResultController {
     private final ResultService resultService;
@@ -26,8 +24,7 @@ public class ResultController {
     @PostMapping("/upload")
     public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            String path = uploadPath + "/" + file.getOriginalFilename();
-            System.out.println(path);
+            String path = String.format("%s/%s", uploadPath, file.getOriginalFilename());
             file.transferTo(new File(path));
         }
         return ResponseEntity.ok();
@@ -46,7 +43,6 @@ public class ResultController {
 
     @DeleteMapping("/delete")
     public ResponseEntity.BodyBuilder deleteResult(@RequestBody DeleteDTO deleteDTO) {
-        System.out.println(deleteDTO);
         resultService.deleteById(deleteDTO.getId());
         return ResponseEntity.ok();
 

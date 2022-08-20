@@ -25,8 +25,8 @@ public class UsersResultsServiceImpl implements UsersResultsService {
     public UsersResults findResult(UsersResults usersResults, UsersTests userTests) {
         double countRight = 0.0;
         double result;
-        List<UsersAnswers> usersAnswers = usersAnswersRepo.findAllByTest(userTests).orElseThrow(() -> new NotFoundException(Constants.USER_ANSWER_NOT_FOUND));
-        List<Result> results = resultRepo.findAllByTest(userTests.getTest()).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
+        List<UsersAnswers> usersAnswers = usersAnswersRepo.findAllByTest(userTests);
+        List<Result> results = resultRepo.findAllByTest(userTests.getTest());
         for (UsersAnswers answer : usersAnswers) {
             if (Boolean.TRUE.equals(answer.getCorrect())) ++countRight;
         }
@@ -43,7 +43,7 @@ public class UsersResultsServiceImpl implements UsersResultsService {
 
     @Override
     public List<UsersResults> findResultByUser(User user) {
-        return usersResultsRepo.findAllByUser(user).orElseThrow(() -> new NotFoundException(Constants.USER_RESULT_NOT_FOUND));
+        return usersResultsRepo.findAllByUser(user);
     }
 
     @Override

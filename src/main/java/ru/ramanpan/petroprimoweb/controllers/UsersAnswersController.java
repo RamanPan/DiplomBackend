@@ -4,11 +4,12 @@ package ru.ramanpan.petroprimoweb.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.ramanpan.petroprimoweb.DTO.*;
+import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
+import ru.ramanpan.petroprimoweb.DTO.UserAnswerDTO;
+import ru.ramanpan.petroprimoweb.DTO.UsersAnswersDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.UsersAnswers;
-import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.service.*;
 
 import java.util.ArrayList;
@@ -60,7 +61,6 @@ public class UsersAnswersController {
     public ResponseEntity.BodyBuilder deleteUsersAnswer(@RequestBody DeleteDTO deleteDTO) {
         usersAnswersService.deleteById(deleteDTO.getId());
         return ResponseEntity.ok();
-
     }
 
 

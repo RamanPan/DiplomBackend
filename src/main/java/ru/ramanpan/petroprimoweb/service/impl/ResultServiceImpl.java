@@ -34,7 +34,7 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public List<Result> findAllByTestId(Long testId) {
         Test test = testRepo.findById(testId).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
-        return resultRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
+        return resultRepo.findAllByTest(test);
     }
 
     @Override

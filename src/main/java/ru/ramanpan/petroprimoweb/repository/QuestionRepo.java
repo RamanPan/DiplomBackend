@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepo extends JpaRepository<Question, Long> {
-    Optional<List<Question>> findAllByTest(Test test);
+    List<Question> findAllByTest(Test test);
 
     Optional<Question> findByStatement(String statement);
 

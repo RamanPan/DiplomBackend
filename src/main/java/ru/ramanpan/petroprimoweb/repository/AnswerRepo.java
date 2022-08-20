@@ -12,7 +12,7 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
 
     void deleteAllByQuestion(Question question);
 
-    Optional<List<Answer>> findAllByQuestion(Question question);
+    List<Answer> findAllByQuestion(Question question);
 
-    Optional<List<Answer>> findAllByQuestionAndCorrectness(Question question, boolean correctness);
+    List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness);
 }

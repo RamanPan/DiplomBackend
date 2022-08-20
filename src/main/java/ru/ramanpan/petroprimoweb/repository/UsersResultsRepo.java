@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsersResultsRepo extends JpaRepository<UsersResults, Long> {
-    Optional<List<UsersResults>> findAllByUser(User user);
+    List<UsersResults> findAllByUser(User user);
 
     Optional<UsersResults> findAllByUserAndTest(User user, UsersTests usersTests);
 
-    Optional<List<UsersResults>> findAllByResult(Result result);
+    List<UsersResults> findAllByResult(Result result);
 }

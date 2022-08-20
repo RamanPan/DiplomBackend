@@ -2,7 +2,6 @@ package ru.ramanpan.petroprimoweb.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
 import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Answer;
@@ -35,12 +34,12 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public List<Answer> findAllByQuestionId(Long questionId) {
         Question question = questionRepo.getById(questionId);
-        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
+        return answerRepo.findAllByQuestion(question);
     }
 
     @Override
     public List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness) {
-        return answerRepo.findAllByQuestionAndCorrectness(question, correctness).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
+        return answerRepo.findAllByQuestionAndCorrectness(question, correctness);
     }
 
     @Override

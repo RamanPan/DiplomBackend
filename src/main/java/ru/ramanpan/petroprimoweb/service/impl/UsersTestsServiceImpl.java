@@ -47,7 +47,7 @@ public class UsersTestsServiceImpl implements UsersTestsService {
     public UsersTests setMark(UsersTests usersTests) {
         Test t = usersTests.getTest();
         t.setNumberPasses(t.getNumberPasses() + 1);
-        List<UsersTests> usersTestsList = usersTestsRepo.findAllByTest(t).orElseThrow(() -> new NotFoundException(Constants.USER_TEST_NOT_FOUND));
+        List<UsersTests> usersTestsList = usersTestsRepo.findAllByTest(t);
         double markTest = usersTests.getMark();
         int counter = 1;
         for (UsersTests u : usersTestsList) {

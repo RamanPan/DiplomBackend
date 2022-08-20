@@ -7,16 +7,15 @@ import ru.ramanpan.petroprimoweb.model.UsersAnswers;
 import ru.ramanpan.petroprimoweb.model.UsersTests;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UsersAnswersRepo extends JpaRepository<UsersAnswers, Long> {
-    Optional<List<UsersAnswers>> findAllByUser(User user);
+    List<UsersAnswers> findAllByUser(User user);
 
-    Optional<List<UsersAnswers>> findAllByAnswer(String answer);
+    List<UsersAnswers> findAllByAnswer(String answer);
 
-    Optional<List<UsersAnswers>> findAllByQuestion(Question question);
+    List<UsersAnswers> findAllByQuestion(Question question);
 
-    Optional<List<UsersAnswers>> findAllByTest(UsersTests usersTests);
+    List<UsersAnswers> findAllByTest(UsersTests usersTests);
 
-    Optional<List<UsersAnswers>> findAllByUserAndTest(User user, UsersTests usersTests);
+    List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests);
 }

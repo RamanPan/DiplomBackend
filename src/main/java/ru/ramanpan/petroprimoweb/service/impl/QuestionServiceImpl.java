@@ -41,7 +41,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> findAllByTestId(Long testId) {
         Test test = testRepo.getById(testId);
-        return questionRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
+        return questionRepo.findAllByTest(test);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Answer> getAnswers(Long id) {
         Question question = findById(id);
-        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
+        return answerRepo.findAllByQuestion(question);
     }
 
     @Override

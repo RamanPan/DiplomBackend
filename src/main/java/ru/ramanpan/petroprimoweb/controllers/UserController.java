@@ -32,8 +32,7 @@ public class UserController {
     @PostMapping("/upload")
     public ResponseEntity.BodyBuilder uploadPicture(@RequestParam("file") MultipartFile file) throws IOException {
         if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            String path = uploadPath + "/" + file.getOriginalFilename();
-            System.out.println(path);
+            String path = String.format("%s/%s", uploadPath, file.getOriginalFilename());
             file.transferTo(new File(path));
         }
         return ResponseEntity.ok();
