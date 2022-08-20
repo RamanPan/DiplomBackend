@@ -9,6 +9,7 @@ import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.repository.ResultRepo;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.ResultService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -27,13 +28,13 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public Result findById(Long id) {
-        return resultRepo.findById(id).orElseThrow(() -> new NotFoundException("Result was not found"));
+        return resultRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
     }
 
     @Override
-    public List<Result> findAllByTestId(Long test_id) {
-        Test test = testRepo.findById(test_id).orElseThrow(() -> new NotFoundException("Test was not found"));
-        return resultRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException("Result was not found"));
+    public List<Result> findAllByTestId(Long testId) {
+        Test test = testRepo.findById(testId).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
+        return resultRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
     }
 
     @Override
@@ -43,12 +44,12 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public Result findByDescription(String description) {
-        return resultRepo.findByDescription(description).orElseThrow(() -> new NotFoundException("Result was not found"));
+        return resultRepo.findByDescription(description).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
     }
 
     @Override
     public Result findByHeader(String header) {
-        return resultRepo.findByHeader(header).orElseThrow(() -> new NotFoundException("Result was not found"));
+        return resultRepo.findByHeader(header).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
     }
 
     @Override
@@ -60,7 +61,7 @@ public class ResultServiceImpl implements ResultService {
         result.setHeader(resultDTO.getHeader());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
         result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
-        result.setTest(testRepo.findById(resultDTO.getTestLong()).orElseThrow(() -> new NotFoundException("Test was not found")));
+        result.setTest(testRepo.findById(resultDTO.getTestLong()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND)));
         result.setCorrectness(resultDTO.getCorrectness());
         result.setCreated(new Date());
         return resultRepo.save(result).getId();
@@ -68,12 +69,12 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public Long update(ResultDTO resultDTO) {
-        Result result = resultRepo.findById(resultDTO.getId()).orElseThrow(() -> new NotFoundException("Result was not found"));
+        Result result = resultRepo.findById(resultDTO.getId()).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
         result.setDescription(resultDTO.getDescription());
         result.setPicture(resultDTO.getPicture());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
         result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
-        result.setTest(testRepo.findById(resultDTO.getTestLong()).orElseThrow(() -> new NotFoundException("Test was not found")));
+        result.setTest(testRepo.findById(resultDTO.getTestLong()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND)));
         result.setCorrectness(resultDTO.getCorrectness());
         result.setHeader(resultDTO.getHeader());
         return resultRepo.save(result).getId();

@@ -9,6 +9,7 @@ import ru.ramanpan.petroprimoweb.repository.ResultRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersResultsRepo;
 import ru.ramanpan.petroprimoweb.service.UsersResultsService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -24,17 +25,17 @@ public class UsersResultsServiceImpl implements UsersResultsService {
     public UsersResults findResult(UsersResults usersResults, UsersTests userTests) {
         double countRight = 0.0;
         double result;
-        List<UsersAnswers> usersAnswers = usersAnswersRepo.findAllByTest(userTests).orElseThrow(() -> new NotFoundException("User answer was not found"));
-        List<Result> results = resultRepo.findAllByTest(userTests.getTest()).orElseThrow(() -> new NotFoundException("Result was not found"));
+        List<UsersAnswers> usersAnswers = usersAnswersRepo.findAllByTest(userTests).orElseThrow(() -> new NotFoundException(Constants.USER_ANSWER_NOT_FOUND));
+        List<Result> results = resultRepo.findAllByTest(userTests.getTest()).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
         for (UsersAnswers answer : usersAnswers) {
-            if (answer.getCorrect()) ++countRight;
+            if (Boolean.TRUE.equals(answer.getCorrect())) ++countRight;
         }
         result = countRight / usersAnswers.size() * 100;
         for (Result r : results) {
             if (r.getStartCondition() <= result && result <= r.getEndCondition()) {
                 usersResults.setResult(r);
                 usersResults.setResultNum(result);
-                if (r.getCorrectness()) userTests.setCorrectness(Correctness.CORRECT);
+                if (Boolean.TRUE.equals(r.getCorrectness())) userTests.setCorrectness(Correctness.CORRECT);
             }
         }
         return usersResults;
@@ -42,12 +43,12 @@ public class UsersResultsServiceImpl implements UsersResultsService {
 
     @Override
     public List<UsersResults> findResultByUser(User user) {
-        return usersResultsRepo.findAllByUser(user).orElseThrow(() -> new NotFoundException("User results were not found"));
+        return usersResultsRepo.findAllByUser(user).orElseThrow(() -> new NotFoundException(Constants.USER_RESULT_NOT_FOUND));
     }
 
     @Override
     public UsersResults findResultByUserAndTest(User user, UsersTests usersTests) {
-        return usersResultsRepo.findAllByUserAndTest(user, usersTests).orElseThrow(() -> new NotFoundException("User result was not found"));
+        return usersResultsRepo.findAllByUserAndTest(user, usersTests).orElseThrow(() -> new NotFoundException(Constants.USER_RESULT_NOT_FOUND));
     }
 
     @Override
@@ -57,7 +58,7 @@ public class UsersResultsServiceImpl implements UsersResultsService {
 
     @Override
     public UsersResults findById(Long id) {
-        return usersResultsRepo.findById(id).orElseThrow(() -> new NotFoundException("User result was not found"));
+        return usersResultsRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.USER_RESULT_NOT_FOUND));
     }
 
     @Override

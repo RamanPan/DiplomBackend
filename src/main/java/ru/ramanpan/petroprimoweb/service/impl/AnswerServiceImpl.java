@@ -10,6 +10,7 @@ import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
 import ru.ramanpan.petroprimoweb.service.AnswerService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -28,18 +29,18 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Answer findById(Long id) {
-        return answerRepo.findById(id).orElseThrow(() -> new NotFoundException("Answer not found"));
+        return answerRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
     }
 
     @Override
-    public List<Answer> findAllByQuestionId(Long question_id) {
-        Question question = questionRepo.getById(question_id);
-        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException("Answers not found"));
+    public List<Answer> findAllByQuestionId(Long questionId) {
+        Question question = questionRepo.getById(questionId);
+        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
     }
 
     @Override
     public List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness) {
-        return answerRepo.findAllByQuestionAndCorrectness(question, correctness).orElseThrow(() -> new NotFoundException("Answers not found"));
+        return answerRepo.findAllByQuestionAndCorrectness(question, correctness).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Answer findByStatement(String statement) {
-        return answerRepo.findByStatement(statement).orElseThrow(() -> new NotFoundException("Answer not found"));
+        return answerRepo.findByStatement(statement).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
     }
 
     @Override
@@ -57,7 +58,7 @@ public class AnswerServiceImpl implements AnswerService {
         Answer answer = new Answer();
         answer.setCorrectness(answerDTO.getCorrectness());
         answer.setStatement(answerDTO.getStatement());
-        answer.setQuestion(questionRepo.findById(answerDTO.getQuestionLong()).orElseThrow(() -> new NotFoundException("Answer not found")));
+        answer.setQuestion(questionRepo.findById(answerDTO.getQuestionLong()).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND)));
         answer.setCreated(new Date());
         return answerRepo.save(answer).getId();
     }

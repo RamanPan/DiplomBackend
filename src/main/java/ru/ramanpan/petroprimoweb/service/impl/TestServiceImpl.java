@@ -12,6 +12,7 @@ import ru.ramanpan.petroprimoweb.model.enums.TestType;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.service.UserService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 import ru.ramanpan.petroprimoweb.util.Switches;
 
 import java.util.Date;
@@ -31,24 +32,24 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test findById(Long id) {
-        return testRepo.findById(id).orElseThrow(() -> new NotFoundException("Test not found"));
+        return testRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
     }
 
     @Override
     public void deleteById(Long id) {
-        Test t = testRepo.findById(id).orElseThrow(() -> new NotFoundException("Test not found"));
+        Test t = testRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
         t.setStatus(Status.DELETED);
         testRepo.save(t);
     }
 
     @Override
     public List<Test> findByAuthor(String author) {
-        return testRepo.findAllByAuthor(author).orElseThrow(() -> new NotFoundException("Tests not found"));
+        return testRepo.findAllByAuthor(author).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
     }
 
     @Override
     public Test update(TestDTO testDTO) {
-        Test test = testRepo.findById(testDTO.getId()).orElseThrow(() -> new NotFoundException("Test not found"));
+        Test test = testRepo.findById(testDTO.getId()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
         test.setName(testDTO.getName());
         test.setAuthor(testDTO.getAuthor());
         test.setDescription(testDTO.getDescription());
@@ -70,7 +71,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test findByName(String name) {
-        return testRepo.findByName(name).orElseThrow(() -> new NotFoundException("Test not found"));
+        return testRepo.findByName(name).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
     }
 
     @Override

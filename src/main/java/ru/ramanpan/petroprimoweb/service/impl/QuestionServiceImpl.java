@@ -15,6 +15,7 @@ import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -34,13 +35,13 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question findById(Long id) {
-        return questionRepo.findById(id).orElseThrow(() -> new NotFoundException("Question not found"));
+        return questionRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
     }
 
     @Override
-    public List<Question> findAllByTestId(Long test_id) {
-        Test test = testRepo.getById(test_id);
-        return questionRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException("Questions not found"));
+    public List<Question> findAllByTestId(Long testId) {
+        Test test = testRepo.getById(testId);
+        return questionRepo.findAllByTest(test).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
     }
 
     @Override
@@ -54,12 +55,12 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Answer> getAnswers(Long id) {
         Question question = findById(id);
-        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException("Answers not found"));
+        return answerRepo.findAllByQuestion(question).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
     }
 
     @Override
     public Question findByStatement(String statement) {
-        return questionRepo.findByStatement(statement).orElseThrow(() -> new NotFoundException("Question not found"));
+        return questionRepo.findByStatement(statement).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
     }
 
     @Override
@@ -68,7 +69,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setStatement(questionDTO.getStatement());
         if (questionDTO.getPicture().equals(" ")) question.setPicture("plug.png");
         else question.setPicture(questionDTO.getPicture());
-        question.setTest(testRepo.findById(questionDTO.getTestLong()).orElseThrow(() -> new NotFoundException("Test not found")));
+        question.setTest(testRepo.findById(questionDTO.getTestLong()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND)));
         String questionType = questionDTO.getType();
         String questionDifficult = questionDTO.getDifficult();
         String questionCategory = questionDTO.getCategory();

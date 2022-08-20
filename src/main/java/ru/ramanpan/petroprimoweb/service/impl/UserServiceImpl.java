@@ -10,6 +10,7 @@ import ru.ramanpan.petroprimoweb.model.enums.Role;
 import ru.ramanpan.petroprimoweb.model.enums.Status;
 import ru.ramanpan.petroprimoweb.repository.UserRepo;
 import ru.ramanpan.petroprimoweb.service.UserService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -65,12 +66,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByNickname(String username) {
-        return userRepo.findByNickname(username).orElseThrow(() -> new NotFoundException("User not found"));
+        return userRepo.findByNickname(username).orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
     }
 
     @Override
     public User findById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        return userRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
     }
 
     @Override

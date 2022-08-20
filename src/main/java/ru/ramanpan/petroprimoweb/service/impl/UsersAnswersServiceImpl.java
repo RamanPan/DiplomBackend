@@ -11,6 +11,7 @@ import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
 import ru.ramanpan.petroprimoweb.service.UserService;
 import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
 import ru.ramanpan.petroprimoweb.service.UsersTestsService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -28,9 +29,11 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
 
     private boolean checkCorrectness(String answer, String correctAnswer) {
         if (answer.isEmpty()) return false;
-        int countEquals = 0, countUnequals = 0, minLength;
-        char[] ans = answer.replaceAll(" ", "").toLowerCase(Locale.ROOT).toCharArray();
-        char[] corAns = correctAnswer.replaceAll(" ", "").toLowerCase(Locale.ROOT).toCharArray();
+        int countEquals = 0;
+        int countUnequals = 0;
+        int minLength;
+        char[] ans = answer.replace(" ", "").toLowerCase(Locale.ROOT).toCharArray();
+        char[] corAns = correctAnswer.replace(" ", "").toLowerCase(Locale.ROOT).toCharArray();
         countUnequals += Math.abs(ans.length - corAns.length);
         minLength = Math.min(ans.length, corAns.length);
         for (int i = 0; i < minLength; ++i) {
@@ -43,8 +46,8 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     @Override
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
-        Question q = questionRepo.findById(answerDTO.getQuestion()).orElseThrow(() -> new NotFoundException("Question was not found"));
-        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true).orElseThrow(() -> new NotFoundException("Answers was not found"));
+        Question q = questionRepo.findById(answerDTO.getQuestion()).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
+        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND));
         if (!q.getType().toString().equals("OPEN")) {
             for (Answer r : right) {
                 if (usersAnswers.getAnswer().equals(r.getStatement())) {
@@ -64,12 +67,12 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
 
     @Override
     public List<UsersAnswers> findAllByUserAndTest(User user, UsersTests usersTests) {
-        return usersAnswersRepo.findAllByUserAndTest(user, usersTests).orElseThrow(() -> new NotFoundException("User answers not found"));
+        return usersAnswersRepo.findAllByUserAndTest(user, usersTests).orElseThrow(() -> new NotFoundException(Constants.USER_ANSWER_NOT_FOUND));
     }
 
     @Override
     public UsersAnswers findById(Long id) {
-        return usersAnswersRepo.findById(id).orElseThrow(() -> new NotFoundException("User answer not found"));
+        return usersAnswersRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.USER_ANSWER_NOT_FOUND));
     }
 
     @Override
@@ -83,7 +86,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
         answer.setAnswer(usersAnswersDTO.getAnswer());
         answer.setTest(usersTestsService.findById(usersAnswersDTO.getUserTest()));
         answer.setUser(userService.findById(usersAnswersDTO.getUser()));
-        answer.setQuestion(questionRepo.findById(usersAnswersDTO.getQuestion()).orElseThrow(() -> new NotFoundException("Question not found")));
+        answer.setQuestion(questionRepo.findById(usersAnswersDTO.getQuestion()).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND)));
         answer.setCorrect(isCorrect(answer, usersAnswersDTO));
         answer.setCreated(new Date());
         return usersAnswersRepo.save(answer);

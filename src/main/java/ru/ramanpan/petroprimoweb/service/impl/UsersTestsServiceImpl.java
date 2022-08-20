@@ -14,6 +14,7 @@ import ru.ramanpan.petroprimoweb.repository.UserRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersTestsRepo;
 import ru.ramanpan.petroprimoweb.service.UsersResultsService;
 import ru.ramanpan.petroprimoweb.service.UsersTestsService;
+import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UsersTestsServiceImpl implements UsersTestsService {
 
     @Override
     public UsersTests findById(Long id) {
-        return usersTestsRepo.findById(id).orElseThrow(() -> new NotFoundException("User test was not found"));
+        return usersTestsRepo.findById(id).orElseThrow(() -> new NotFoundException(Constants.USER_TEST_NOT_FOUND));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class UsersTestsServiceImpl implements UsersTestsService {
     public UsersTests setMark(UsersTests usersTests) {
         Test t = usersTests.getTest();
         t.setNumberPasses(t.getNumberPasses() + 1);
-        List<UsersTests> usersTestsList = usersTestsRepo.findAllByTest(t).orElseThrow(() -> new NotFoundException("User test was not found"));
+        List<UsersTests> usersTestsList = usersTestsRepo.findAllByTest(t).orElseThrow(() -> new NotFoundException(Constants.USER_TEST_NOT_FOUND));
         double markTest = usersTests.getMark();
         int counter = 1;
         for (UsersTests u : usersTestsList) {
@@ -63,13 +64,13 @@ public class UsersTestsServiceImpl implements UsersTestsService {
     @Override
     public UsersResults setResultToTest(UsersTests usersTests, UsersResultsDTO dto) {
         UsersResults usersResults = new UsersResults();
-        Test t = testRepo.findById(usersTests.getTest().getId()).orElseThrow(() -> new NotFoundException("Test was not found"));
-        User u = userRepo.findById(usersTests.getUser().getId()).orElseThrow(() -> new NotFoundException("User was not found"));
+        Test t = testRepo.findById(usersTests.getTest().getId()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
+        User u = userRepo.findById(usersTests.getUser().getId()).orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND));
         t.setNumberPasses(t.getNumberPasses() + 1);
         u.setCountPassed(u.getCountPassed() + 1);
         usersResults.setCreated(new Date());
         usersTests.setCorrectness(Correctness.INCORRECT);
-        usersResults.setUser(userRepo.findById(dto.getUser()).orElseThrow(() -> new NotFoundException("User was not found")));
+        usersResults.setUser(userRepo.findById(dto.getUser()).orElseThrow(() -> new NotFoundException(Constants.USER_NOT_FOUND)));
         usersResultsService.findResult(usersResults, usersTests);
         usersResults.setTest(usersTests);
         if (usersTests.getCorrectness().equals(Correctness.CORRECT))
