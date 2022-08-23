@@ -2,7 +2,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
+import ru.ramanpan.petroprimoweb.dto.ResultDTO;
 import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Result;
 import ru.ramanpan.petroprimoweb.model.Test;

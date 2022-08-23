@@ -1,15 +1,19 @@
 package ru.ramanpan.petroprimoweb.util;
 
-import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
-import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
-import ru.ramanpan.petroprimoweb.DTO.TestCardDTO;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import ru.ramanpan.petroprimoweb.dto.QuestionDTO;
+import ru.ramanpan.petroprimoweb.dto.ResultDTO;
+import ru.ramanpan.petroprimoweb.dto.TestCardDTO;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.model.enums.DeterministicOption;
 import ru.ramanpan.petroprimoweb.model.enums.TestType;
 
+import java.util.Collections;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Switches {
     public static DeterministicOption selectionOption(String option) {
         switch (option) {
@@ -93,7 +97,7 @@ public class Switches {
                 culture.addAll(economic);
                 return culture;
             default:
-                return null;
+                return Collections.emptyList();
         }
     }
 

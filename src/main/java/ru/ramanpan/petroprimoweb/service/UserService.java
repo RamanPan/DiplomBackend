@@ -1,6 +1,6 @@
 package ru.ramanpan.petroprimoweb.service;
 
-import ru.ramanpan.petroprimoweb.DTO.RegistrationRequestDTO;
+import ru.ramanpan.petroprimoweb.dto.RegistrationRequestDTO;
 import ru.ramanpan.petroprimoweb.model.User;
 
 import java.util.List;

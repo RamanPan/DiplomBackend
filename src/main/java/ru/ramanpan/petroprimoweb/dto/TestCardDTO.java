@@ -1,4 +1,4 @@
-package ru.ramanpan.petroprimoweb.DTO;
+package ru.ramanpan.petroprimoweb.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

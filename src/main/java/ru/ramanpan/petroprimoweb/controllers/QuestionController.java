@@ -4,13 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
-import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
-import ru.ramanpan.petroprimoweb.DTO.IdDTO;
-import ru.ramanpan.petroprimoweb.DTO.QuestionDTO;
+import ru.ramanpan.petroprimoweb.dto.AnswerDTO;
+import ru.ramanpan.petroprimoweb.dto.QuestionDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
 
@@ -53,9 +50,9 @@ public class QuestionController {
         return ResponseEntity.ok();
     }
 
-    @PostMapping("/getAnswers")
-    public ResponseEntity<Set<AnswerDTO>> getAnswers(@RequestBody IdDTO id) {
-        return ResponseEntity.ok(getSetAnswerDTO(questionService.getAnswers(id.getId())));
+    @PostMapping("/getAnswers/{id}")
+    public ResponseEntity<Set<AnswerDTO>> getAnswers(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(getSetAnswerDTO(questionService.getAnswers(id)));
     }
 
 
@@ -64,10 +61,9 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.save(questionDTO));
     }
 
-    @Transactional
-    @DeleteMapping("/delete")
-    public ResponseEntity.BodyBuilder deleteQuestion(@RequestBody DeleteDTO deleteDTO) {
-        questionService.deleteById(deleteDTO.getId());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity.BodyBuilder deleteQuestion(@PathVariable("id") Long id) {
+        questionService.deleteById(id);
         return ResponseEntity.ok();
 
     }

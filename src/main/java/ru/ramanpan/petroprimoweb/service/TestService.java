@@ -1,7 +1,7 @@
 package ru.ramanpan.petroprimoweb.service;
 
 
-import ru.ramanpan.petroprimoweb.DTO.TestDTO;
+import ru.ramanpan.petroprimoweb.dto.TestDTO;
 import ru.ramanpan.petroprimoweb.model.Test;
 
 import java.util.List;

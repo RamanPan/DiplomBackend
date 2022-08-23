@@ -1,8 +1,11 @@
 package ru.ramanpan.petroprimoweb.util;
 
-import ru.ramanpan.petroprimoweb.DTO.UserResultDTO;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import ru.ramanpan.petroprimoweb.dto.UserResultDTO;
 import ru.ramanpan.petroprimoweb.model.UsersResults;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Mapping {
     public static UserResultDTO toUserResultDTO(UsersResults usersResults) {
         UserResultDTO u = new UserResultDTO();

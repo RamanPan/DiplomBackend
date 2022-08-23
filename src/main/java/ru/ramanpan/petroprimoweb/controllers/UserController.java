@@ -6,9 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.ActualUserDTO;
-import ru.ramanpan.petroprimoweb.DTO.GetPictureDTO;
-import ru.ramanpan.petroprimoweb.DTO.UploadUserDTO;
+import ru.ramanpan.petroprimoweb.dto.ActualUserDTO;
+import ru.ramanpan.petroprimoweb.dto.UploadUserDTO;
 import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.service.UserService;
 
@@ -46,10 +45,10 @@ public class UserController {
         return ResponseEntity.ok();
     }
 
-    @PostMapping("/getPicture")
-    public ResponseEntity<Map<String, String>> getPicture(@RequestBody GetPictureDTO dto) {
+    @GetMapping("/getPicture/{author}")
+    public ResponseEntity<Map<String, String>> getPicture(@PathVariable("author") String author) {
         Map<String, String> map = new HashMap<>();
-        map.put("picture", userService.findByNickname(dto.getAuthor()).getPicture());
+        map.put("picture", userService.findByNickname(author).getPicture());
         return ResponseEntity.ok(map);
 
     }
@@ -83,9 +82,9 @@ public class UserController {
         return ResponseEntity.ok();
     }
 
-    @PostMapping("/actUser")
-    public ResponseEntity<ActualUserDTO> getActualUser(@RequestBody UploadUserDTO userDTO) {
-        return ResponseEntity.ok(ActualUserDTO.mapToDTO(userService.findById(userDTO.getId())));
+    @GetMapping("/actUser/{id}")
+    public ResponseEntity<ActualUserDTO> getActualUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(ActualUserDTO.mapToDTO(userService.findById(id)));
 
     }
 

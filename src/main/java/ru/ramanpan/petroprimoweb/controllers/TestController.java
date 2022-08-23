@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.*;
+import ru.ramanpan.petroprimoweb.dto.*;
 import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
@@ -211,9 +211,9 @@ public class TestController {
         return testCardDTO;
     }
 
-    @PostMapping("/getTestForUpdate")
-    public TestCardDTO getTestForUpdate(@RequestBody TestDTO id) {
-        Test t = testService.findById(id.getId());
+    @GetMapping("/getTestForUpdate/{id}")
+    public TestCardDTO getTestForUpdate(@PathVariable("id") Long id) {
+        Test t = testService.findById(id);
         return Switches.testCardForUpdate(modelMapper.map(t, TestCardDTO.class), t);
     }
 
@@ -229,32 +229,32 @@ public class TestController {
         return modelMapper.map(q, QuestionDTO.class);
     }
 
-    @PostMapping("/getQuestions")
-    public List<QuestionDTO> getQuestions(@RequestBody IdDTO idDTO) {
+    @GetMapping("/getQuestions/{id}")
+    public List<QuestionDTO> getQuestions(@PathVariable("id") Long id) {
         List<QuestionDTO> questions = new ArrayList<>();
         int i = 1;
-        for (Question q : testService.findById(idDTO.getId()).getQuestions()) {
+        for (Question q : testService.findById(id).getQuestions()) {
             questions.add(Switches.questionForUpdate(modelMapper.map(q, QuestionDTO.class), q, i));
             i++;
         }
         return questions;
     }
 
-    @PostMapping("/getResults")
-    public List<ResultDTO> getResults(@RequestBody IdDTO idDTO) {
+    @GetMapping("/getResults/{id}")
+    public List<ResultDTO> getResults(@PathVariable("id") Long id) {
         List<ResultDTO> results = new ArrayList<>();
         int i = 1;
-        for (Result r : testService.findById(idDTO.getId()).getResults()) {
+        for (Result r : testService.findById(id).getResults()) {
             results.add(Switches.resultForUpdate(modelMapper.map(r, ResultDTO.class), i));
             i++;
         }
         return results;
     }
 
-    @PostMapping("/getPercents")
-    public List<Integer> getPercents(@RequestBody IdDTO idDTO) {
+    @GetMapping("/getPercents/{id}")
+    public List<Integer> getPercents(@PathVariable("id")Long id) {
         List<Integer> percents = new ArrayList<>();
-        Test testFind = testService.findById(idDTO.getId());
+        Test testFind = testService.findById(id);
         percents.add(testFind.getNumberQuestions());
         if (testFind.getPercentPolitic() > -1) {
             percents.add(testFind.getPercentCulture());
@@ -310,15 +310,15 @@ public class TestController {
     }
 
 
-    @DeleteMapping("/delete")
-    public ResponseEntity.BodyBuilder deleteTest(@RequestBody DeleteDTO deleteDTO) {
-        testService.deleteById(deleteDTO.getId());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity.BodyBuilder deleteTest(@PathVariable("id") Long id) {
+        testService.deleteById(id);
         return ResponseEntity.ok();
     }
 
-    @PostMapping("/setNQ")
-    public ResponseEntity<Long> setNQ(@RequestBody IdDTO dto) {
-        Test test = testService.findById(dto.getId());
+    @PostMapping("/setNQ/{id}")
+    public ResponseEntity<Long> setNQ(@PathVariable("id") Long id) {
+        Test test = testService.findById(id);
         test.setNumberQuestions(test.getQuestions().size());
         return ResponseEntity.ok(testService.specificUpdate(test).getId());
     }

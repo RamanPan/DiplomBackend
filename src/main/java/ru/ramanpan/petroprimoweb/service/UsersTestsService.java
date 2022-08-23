@@ -1,6 +1,6 @@
 package ru.ramanpan.petroprimoweb.service;
 
-import ru.ramanpan.petroprimoweb.DTO.UsersResultsDTO;
+import ru.ramanpan.petroprimoweb.dto.UsersResultsDTO;
 import ru.ramanpan.petroprimoweb.model.UsersResults;
 import ru.ramanpan.petroprimoweb.model.UsersTests;
 

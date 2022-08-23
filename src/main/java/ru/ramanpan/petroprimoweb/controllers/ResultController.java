@@ -5,8 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
-import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
+import ru.ramanpan.petroprimoweb.dto.ResultDTO;
 import ru.ramanpan.petroprimoweb.service.ResultService;
 
 import java.io.File;
@@ -41,9 +40,9 @@ public class ResultController {
     }
 
 
-    @DeleteMapping("/delete")
-    public ResponseEntity.BodyBuilder deleteResult(@RequestBody DeleteDTO deleteDTO) {
-        resultService.deleteById(deleteDTO.getId());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity.BodyBuilder deleteResult(@PathVariable("id") Long id) {
+        resultService.deleteById(id);
         return ResponseEntity.ok();
 
     }

@@ -3,7 +3,7 @@ package ru.ramanpan.petroprimoweb.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.ramanpan.petroprimoweb.DTO.*;
+import ru.ramanpan.petroprimoweb.dto.*;
 import ru.ramanpan.petroprimoweb.model.UsersTests;
 import ru.ramanpan.petroprimoweb.service.*;
 import ru.ramanpan.petroprimoweb.util.Mapping;

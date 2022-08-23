@@ -1,6 +1,6 @@
 package ru.ramanpan.petroprimoweb.service;
 
-import ru.ramanpan.petroprimoweb.DTO.ResultDTO;
+import ru.ramanpan.petroprimoweb.dto.ResultDTO;
 import ru.ramanpan.petroprimoweb.model.Result;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public interface ResultService {
 
     Result findById(Long id);
 
-    List<Result> findAllByTestId(Long test_id);
+    List<Result> findAllByTestId(Long testId);
 
     void deleteById(Long id);
 

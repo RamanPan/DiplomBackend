@@ -1,6 +1,6 @@
 package ru.ramanpan.petroprimoweb.service;
 
-import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
+import ru.ramanpan.petroprimoweb.dto.AnswerDTO;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 
@@ -11,7 +11,7 @@ public interface AnswerService {
 
     Answer findById(Long id);
 
-    List<Answer> findAllByQuestionId(Long question_id);
+    List<Answer> findAllByQuestionId(Long questionId);
 
     void deleteById(Long id);
 

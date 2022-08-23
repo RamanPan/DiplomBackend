@@ -3,7 +3,7 @@ package ru.ramanpan.petroprimoweb.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.ramanpan.petroprimoweb.DTO.RegistrationRequestDTO;
+import ru.ramanpan.petroprimoweb.dto.RegistrationRequestDTO;
 import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.User;
 import ru.ramanpan.petroprimoweb.model.enums.Role;

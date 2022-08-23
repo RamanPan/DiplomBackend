@@ -3,8 +3,7 @@ package ru.ramanpan.petroprimoweb.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.ramanpan.petroprimoweb.DTO.AnswerDTO;
-import ru.ramanpan.petroprimoweb.DTO.DeleteDTO;
+import ru.ramanpan.petroprimoweb.dto.AnswerDTO;
 import ru.ramanpan.petroprimoweb.service.AnswerService;
 
 @RestController
@@ -14,9 +13,9 @@ public class AnswerController {
     private final AnswerService answerService;
 
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Integer> deleteAnswer(@RequestBody DeleteDTO deleteDTO) {
-        answerService.deleteById(deleteDTO.getId());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Integer> deleteAnswer(@PathVariable("id") Long id) {
+        answerService.deleteById(id);
         return ResponseEntity.ok(1);
 
     }
