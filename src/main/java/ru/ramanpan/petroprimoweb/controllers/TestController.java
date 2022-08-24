@@ -99,7 +99,8 @@ public class TestController {
     }
 
     private Question selectionQuestionForDynamicTest(int index, long idUserAnswer) {
-        Question q = null, lastQuestion, qE = null, qM = null, qH = null;
+        Question q = null, qE = null, qM = null, qH = null;
+        Question lastQuestion;
         String difficult = "";
         if (removedQuestions.isEmpty()) {
             if (passedSuccessfully > passedUnsuccessful) difficult = Constants.HARD;
@@ -252,7 +253,7 @@ public class TestController {
     }
 
     @GetMapping("/getPercents/{id}")
-    public List<Integer> getPercents(@PathVariable("id")Long id) {
+    public List<Integer> getPercents(@PathVariable("id") Long id) {
         List<Integer> percents = new ArrayList<>();
         Test testFind = testService.findById(id);
         percents.add(testFind.getNumberQuestions());
@@ -318,26 +319,26 @@ public class TestController {
 
     @PostMapping("/setNQ/{id}")
     public ResponseEntity<Long> setNQ(@PathVariable("id") Long id) {
-        Test test = testService.findById(id);
-        test.setNumberQuestions(test.getQuestions().size());
-        return ResponseEntity.ok(testService.specificUpdate(test).getId());
+        Test localTest = testService.findById(id);
+        test.setNumberQuestions(localTest.getQuestions().size());
+        return ResponseEntity.ok(testService.specificUpdate(localTest).getId());
     }
 
     @PostMapping("/setPercents")
     public ResponseEntity<Long> setPercentsQuestions(@RequestBody TestDTO dto) {
-        Test test = testService.findById(dto.getId());
-        test.setPercentCulture(dto.getPercentCulture());
-        test.setPercentEconomic(dto.getPercentEconomic());
-        test.setPercentPolitic(dto.getPercentPolitic());
-        test.setNumberQuestions(Integer.valueOf(dto.getNumberQuestions()));
-        return ResponseEntity.ok(testService.specificUpdate(test).getId());
+        Test localTest = testService.findById(dto.getId());
+        localTest.setPercentCulture(dto.getPercentCulture());
+        localTest.setPercentEconomic(dto.getPercentEconomic());
+        localTest.setPercentPolitic(dto.getPercentPolitic());
+        localTest.setNumberQuestions(Integer.valueOf(dto.getNumberQuestions()));
+        return ResponseEntity.ok(testService.specificUpdate(localTest).getId());
     }
 
     @PostMapping("/setNumberPasses")
     public ResponseEntity<Integer> setNumberPasses(@RequestBody TestDTO testDTO) {
-        Test test = testService.findById(testDTO.getId());
-        test.setNumberPasses(testDTO.getNumberPasses());
-        return ResponseEntity.ok(testService.specificUpdate(test).getNumberPasses());
+        Test localTest = testService.findById(testDTO.getId());
+        localTest.setNumberPasses(testDTO.getNumberPasses());
+        return ResponseEntity.ok(testService.specificUpdate(localTest).getNumberPasses());
     }
 
 }
