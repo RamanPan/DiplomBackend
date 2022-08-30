@@ -19,5 +19,5 @@ public interface AnswerService {
 
     List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness);
 
-    Long save(AnswerDTO answer);
+    Answer save(AnswerDTO answerDTO);
 }

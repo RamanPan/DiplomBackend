@@ -7,8 +7,8 @@ import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Answer;
 import ru.ramanpan.petroprimoweb.model.Question;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
-import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
 import ru.ramanpan.petroprimoweb.service.AnswerService;
+import ru.ramanpan.petroprimoweb.service.QuestionService;
 import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
@@ -18,8 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepo answerRepo;
-    private final QuestionRepo questionRepo;
-
+    private final QuestionService questionService;
 
     @Override
     public List<Answer> findAll() {
@@ -33,7 +32,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<Answer> findAllByQuestionId(Long questionId) {
-        Question question = questionRepo.getById(questionId);
+        Question question = questionService.findById(questionId);
         return answerRepo.findAllByQuestion(question);
     }
 
@@ -44,7 +43,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public void deleteById(Long id) {
-        answerRepo.delete(findById(id));
+        answerRepo.deleteById(id);
     }
 
     @Override
@@ -53,12 +52,12 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Long save(AnswerDTO answerDTO) {
+    public Answer save(AnswerDTO answerDTO) {
         Answer answer = new Answer();
         answer.setCorrectness(answerDTO.getCorrectness());
         answer.setStatement(answerDTO.getStatement());
-        answer.setQuestion(questionRepo.findById(answerDTO.getQuestionLong()).orElseThrow(() -> new NotFoundException(Constants.ANSWER_NOT_FOUND)));
+        answer.setQuestion(questionService.findById(answerDTO.getQuestionLong()));
         answer.setCreated(new Date());
-        return answerRepo.save(answer).getId();
+        return answerRepo.save(answer);
     }
 }
