@@ -17,6 +17,8 @@ public interface AnswerService {
 
     Answer findByStatement(String statement);
 
+    void deleteByQuestion(Question question);
+
     List<Answer> findAllByQuestionAndCorrectness(Question question, boolean correctness);
 
     Answer save(AnswerDTO answerDTO);

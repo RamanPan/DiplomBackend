@@ -14,7 +14,9 @@ import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
 import ru.ramanpan.petroprimoweb.repository.TestRepo;
+import ru.ramanpan.petroprimoweb.service.AnswerService;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
+import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
@@ -24,8 +26,8 @@ import java.util.List;
 @AllArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepo questionRepo;
-    private final TestRepo testRepo;
-    private final AnswerRepo answerRepo;
+    private final TestService testService;
+    private final AnswerService answerService;
 
 
     @Override
@@ -40,22 +42,20 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findAllByTestId(Long testId) {
-        Test test = testRepo.getById(testId);
+        Test test = testService.findById(testId);
         return questionRepo.findAllByTest(test);
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         Question question = findById(id);
-        answerRepo.deleteAllByQuestion(question);
+        answerService.deleteByQuestion(question);
         questionRepo.deleteById(id);
     }
 
     @Override
     public List<Answer> getAnswers(Long id) {
-        Question question = findById(id);
-        return answerRepo.findAllByQuestion(question);
+        return answerService.findAllByQuestionId(id);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setStatement(questionDTO.getStatement());
         if (questionDTO.getPicture().equals(" ")) question.setPicture("plug.png");
         else question.setPicture(questionDTO.getPicture());
-        question.setTest(testRepo.findById(questionDTO.getTestLong()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND)));
+        question.setTest(testService.findById(questionDTO.getTestLong()));
         String questionType = questionDTO.getType();
         String questionDifficult = questionDTO.getDifficult();
         String questionCategory = questionDTO.getCategory();
