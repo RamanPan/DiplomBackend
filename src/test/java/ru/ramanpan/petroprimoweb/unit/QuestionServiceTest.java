@@ -33,13 +33,15 @@ public class QuestionServiceTest {
     }
 
     @Test
-    public void deleteByIdTest() {
+    public void findAllTest() {
+        questionService.findAll();
+        Mockito.verify(questionRepo, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void getAnswersTest() {
         Long id = 1L;
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setId(id);
-//        questionDTO.setPicture(" ");
-//        questionDTO.setType("Закрытый");
-        questionService.save(questionDTO);
-        Mockito.verify(testService, Mockito.times(1)).findById(id);
+        questionService.getAnswers(id);
+        Mockito.verify(answerService, Mockito.times(1)).findAllByQuestionId(id);
     }
 }
