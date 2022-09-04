@@ -19,5 +19,5 @@ public interface QuestionService {
 
     Question findByStatement(String statement);
 
-    Long save(QuestionDTO questionDTO);
+    Question save(QuestionDTO questionDTO);
 }

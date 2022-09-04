@@ -58,7 +58,7 @@ public class QuestionController {
 
     @PostMapping("/create")
     public ResponseEntity<Long> createQuestion(@RequestBody QuestionDTO questionDTO) {
-        return ResponseEntity.ok(questionService.save(questionDTO));
+        return ResponseEntity.ok(questionService.save(questionDTO).getId());
     }
 
     @DeleteMapping("/delete/{id}")
