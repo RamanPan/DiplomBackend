@@ -31,12 +31,12 @@ public class ResultController {
 
     @PostMapping("/create")
     public ResponseEntity<Long> createResult(@RequestBody ResultDTO resultDTO) {
-        return ResponseEntity.ok(resultService.save(resultDTO));
+        return ResponseEntity.ok(resultService.save(resultDTO).getId());
     }
 
     @PostMapping("/update")
     public ResponseEntity<Long> updateResult(@RequestBody ResultDTO resultDTO) {
-        return ResponseEntity.ok(resultService.update(resultDTO));
+        return ResponseEntity.ok(resultService.update(resultDTO).getId());
     }
 
 

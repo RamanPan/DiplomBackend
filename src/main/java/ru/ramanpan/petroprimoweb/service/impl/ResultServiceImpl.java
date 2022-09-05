@@ -7,8 +7,8 @@ import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.Result;
 import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.repository.ResultRepo;
-import ru.ramanpan.petroprimoweb.repository.TestRepo;
 import ru.ramanpan.petroprimoweb.service.ResultService;
+import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ResultServiceImpl implements ResultService {
     private final ResultRepo resultRepo;
-    private final TestRepo testRepo;
+    private final TestService testService;
 
 
     @Override
@@ -33,7 +33,7 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public List<Result> findAllByTestId(Long testId) {
-        Test test = testRepo.findById(testId).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND));
+        Test test = testService.findById(testId);
         return resultRepo.findAllByTest(test);
     }
 
@@ -53,7 +53,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     @Override
-    public Long save(ResultDTO resultDTO) {
+    public Result save(ResultDTO resultDTO) {
         Result result = new Result();
         result.setDescription(resultDTO.getDescription());
         if (resultDTO.getPicture().equals(" ")) result.setPicture("plug.png");
@@ -61,22 +61,22 @@ public class ResultServiceImpl implements ResultService {
         result.setHeader(resultDTO.getHeader());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
         result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
-        result.setTest(testRepo.findById(resultDTO.getTestLong()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND)));
+        result.setTest(testService.findById(resultDTO.getTestLong()));
         result.setCorrectness(resultDTO.getCorrectness());
         result.setCreated(new Date());
-        return resultRepo.save(result).getId();
+        return resultRepo.save(result);
     }
 
     @Override
-    public Long update(ResultDTO resultDTO) {
-        Result result = resultRepo.findById(resultDTO.getId()).orElseThrow(() -> new NotFoundException(Constants.RESULT_NOT_FOUND));
+    public Result update(ResultDTO resultDTO) {
+        Result result = findById(resultDTO.getId());
         result.setDescription(resultDTO.getDescription());
         result.setPicture(resultDTO.getPicture());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));
         result.setEndCondition(Double.valueOf(resultDTO.getEndCondition()));
-        result.setTest(testRepo.findById(resultDTO.getTestLong()).orElseThrow(() -> new NotFoundException(Constants.TEST_NOT_FOUND)));
+        result.setTest(testService.findById(resultDTO.getTestLong()));
         result.setCorrectness(resultDTO.getCorrectness());
         result.setHeader(resultDTO.getHeader());
-        return resultRepo.save(result).getId();
+        return resultRepo.save(result);
     }
 }

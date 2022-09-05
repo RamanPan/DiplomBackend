@@ -18,7 +18,7 @@ public interface ResultService {
 
     Result findByHeader(String header);
 
-    Long save(ResultDTO resultDTO);
+    Result save(ResultDTO resultDTO);
 
-    Long update(ResultDTO resultDTO);
+    Result update(ResultDTO resultDTO);
 }
