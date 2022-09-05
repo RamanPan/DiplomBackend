@@ -10,8 +10,8 @@ import ru.ramanpan.petroprimoweb.model.Test;
 import ru.ramanpan.petroprimoweb.model.enums.DifficultyQuestion;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionCategory;
 import ru.ramanpan.petroprimoweb.model.enums.QuestionType;
+import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
-import ru.ramanpan.petroprimoweb.service.AnswerService;
 import ru.ramanpan.petroprimoweb.service.QuestionService;
 import ru.ramanpan.petroprimoweb.service.TestService;
 import ru.ramanpan.petroprimoweb.util.Constants;
@@ -24,7 +24,7 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepo questionRepo;
     private final TestService testService;
-    private final AnswerService answerService;
+    private final AnswerRepo answerRepo;
 
 
     @Override
@@ -46,13 +46,14 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void deleteById(Long id) {
         Question question = findById(id);
-        answerService.deleteByQuestion(question);
+        answerRepo.deleteAllByQuestion(question);
         questionRepo.deleteById(id);
     }
 
     @Override
     public List<Answer> getAnswers(Long id) {
-        return answerService.findAllByQuestionId(id);
+        Question question = findById(id);
+        return answerRepo.findAllByQuestion(question);
     }
 
     @Override

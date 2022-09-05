@@ -56,7 +56,7 @@ public class ResultServiceImpl implements ResultService {
     public Result save(ResultDTO resultDTO) {
         Result result = new Result();
         result.setDescription(resultDTO.getDescription());
-        if (resultDTO.getPicture().equals(" ")) result.setPicture("plug.png");
+        if (" ".equals(resultDTO.getPicture())) result.setPicture("plug.png");
         else result.setPicture(resultDTO.getPicture());
         result.setHeader(resultDTO.getHeader());
         result.setStartCondition(Double.valueOf(resultDTO.getStartCondition()));

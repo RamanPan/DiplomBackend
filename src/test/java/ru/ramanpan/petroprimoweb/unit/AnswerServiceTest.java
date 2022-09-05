@@ -35,13 +35,13 @@ public class AnswerServiceTest {
     public void saveTest() {
         AnswerDTO answerDTO = new AnswerDTO();
         answerService.save(answerDTO);
-        Mockito.verify(questionService,Mockito.times(1)).findById(answerDTO.getId());
+        Mockito.verify(questionService, Mockito.times(1)).findById(answerDTO.getId());
     }
 
     @Test
     public void deleteByIdTest() {
         Long id = 1L;
         answerService.deleteById(id);
-        Mockito.verify(answerRepo,Mockito.times(1)).deleteById(id);
+        Mockito.verify(answerRepo, Mockito.times(1)).deleteById(id);
     }
 }
