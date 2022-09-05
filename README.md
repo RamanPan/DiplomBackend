@@ -1,7 +1,7 @@
 # DiplomBackend
 ## Разработка образовательного веб-ресурса по эпохе Петра I
 В папке addition можно посмотреть описание, презентацию и видео проекта. 
-### Stack 
+### Project Stack 
 1. Java 11
 2. SpringBoot 2.6.2
 3. PostgresSQL 14.4
