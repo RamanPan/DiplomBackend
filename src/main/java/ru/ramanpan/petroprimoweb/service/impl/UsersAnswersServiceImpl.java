@@ -6,8 +6,8 @@ import ru.ramanpan.petroprimoweb.dto.UsersAnswersDTO;
 import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
-import ru.ramanpan.petroprimoweb.repository.QuestionRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
+import ru.ramanpan.petroprimoweb.service.QuestionService;
 import ru.ramanpan.petroprimoweb.service.UserService;
 import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
 import ru.ramanpan.petroprimoweb.service.UsersTestsService;
@@ -22,7 +22,7 @@ import java.util.Locale;
 public class UsersAnswersServiceImpl implements UsersAnswersService {
     private final UsersAnswersRepo usersAnswersRepo;
     private final AnswerRepo answerRepo;
-    private final QuestionRepo questionRepo;
+    private final QuestionService questionService;
     private final UsersTestsService usersTestsService;
     private final UserService userService;
 
@@ -46,7 +46,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     @Override
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
-        Question q = questionRepo.findById(answerDTO.getQuestion()).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND));
+        Question q = questionService.findById(answerDTO.getQuestion());
         List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true);
         if (!q.getType().toString().equals("OPEN")) {
             for (Answer r : right) {
@@ -86,7 +86,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
         answer.setAnswer(usersAnswersDTO.getAnswer());
         answer.setTest(usersTestsService.findById(usersAnswersDTO.getUserTest()));
         answer.setUser(userService.findById(usersAnswersDTO.getUser()));
-        answer.setQuestion(questionRepo.findById(usersAnswersDTO.getQuestion()).orElseThrow(() -> new NotFoundException(Constants.QUESTION_NOT_FOUND)));
+        answer.setQuestion(questionService.findById(usersAnswersDTO.getQuestion()));
         answer.setCorrect(isCorrect(answer, usersAnswersDTO));
         answer.setCreated(new Date());
         return usersAnswersRepo.save(answer);
