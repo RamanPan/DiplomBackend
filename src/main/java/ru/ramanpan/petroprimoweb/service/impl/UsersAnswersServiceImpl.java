@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.ramanpan.petroprimoweb.dto.UsersAnswersDTO;
 import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.*;
-import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
 import ru.ramanpan.petroprimoweb.service.*;
 import ru.ramanpan.petroprimoweb.util.Constants;
@@ -44,8 +43,9 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
         Question q = questionService.findById(answerDTO.getQuestion());
+        if(q == null) return false;
         List<Answer> right = answerService.findAllByQuestionAndCorrectness(q, true);
-        if (!q.getType().toString().equals("OPEN")) {
+        if (!"OPEN".equals(q.getType().toString())) {
             for (Answer r : right) {
                 if (usersAnswers.getAnswer().equals(r.getStatement())) {
                     correctness = true;
