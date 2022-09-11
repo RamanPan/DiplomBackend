@@ -7,10 +7,7 @@ import ru.ramanpan.petroprimoweb.exceptions.NotFoundException;
 import ru.ramanpan.petroprimoweb.model.*;
 import ru.ramanpan.petroprimoweb.repository.AnswerRepo;
 import ru.ramanpan.petroprimoweb.repository.UsersAnswersRepo;
-import ru.ramanpan.petroprimoweb.service.QuestionService;
-import ru.ramanpan.petroprimoweb.service.UserService;
-import ru.ramanpan.petroprimoweb.service.UsersAnswersService;
-import ru.ramanpan.petroprimoweb.service.UsersTestsService;
+import ru.ramanpan.petroprimoweb.service.*;
 import ru.ramanpan.petroprimoweb.util.Constants;
 
 import java.util.Date;
@@ -21,7 +18,7 @@ import java.util.Locale;
 @AllArgsConstructor
 public class UsersAnswersServiceImpl implements UsersAnswersService {
     private final UsersAnswersRepo usersAnswersRepo;
-    private final AnswerRepo answerRepo;
+    private final AnswerService answerService;
     private final QuestionService questionService;
     private final UsersTestsService usersTestsService;
     private final UserService userService;
@@ -47,7 +44,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     public boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO) {
         boolean correctness = false;
         Question q = questionService.findById(answerDTO.getQuestion());
-        List<Answer> right = answerRepo.findAllByQuestionAndCorrectness(q, true);
+        List<Answer> right = answerService.findAllByQuestionAndCorrectness(q, true);
         if (!q.getType().toString().equals("OPEN")) {
             for (Answer r : right) {
                 if (usersAnswers.getAnswer().equals(r.getStatement())) {
