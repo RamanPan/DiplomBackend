@@ -12,6 +12,8 @@ public interface UsersAnswersService {
 
     UsersAnswers findById(Long id);
 
+    boolean checkCorrectness(String answer, String correctAnswer);
+
     void deleteById(Long id);
 
     boolean isCorrect(UsersAnswers usersAnswers, UsersAnswersDTO answerDTO);

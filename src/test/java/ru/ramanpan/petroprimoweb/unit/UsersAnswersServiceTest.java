@@ -1,5 +1,6 @@
 package ru.ramanpan.petroprimoweb.unit;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -52,6 +53,13 @@ public class UsersAnswersServiceTest {
         Long id = 1L;
         usersAnswersService.deleteById(id);
         Mockito.verify(usersAnswersRepo, Mockito.times(1)).deleteById(id);
+    }
+
+    @Test
+    public void checkCorrectnessTest() {
+        String rightAnswer = "Roman";
+        String userAnswer = "Roma";
+        Assert.assertTrue(usersAnswersService.checkCorrectness(userAnswer, rightAnswer));
     }
 
 }

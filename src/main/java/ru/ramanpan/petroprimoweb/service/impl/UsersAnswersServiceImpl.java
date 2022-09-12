@@ -23,7 +23,7 @@ public class UsersAnswersServiceImpl implements UsersAnswersService {
     private final UserService userService;
 
 
-    private boolean checkCorrectness(String answer, String correctAnswer) {
+    public boolean checkCorrectness(String answer, String correctAnswer) {
         if (answer.isEmpty()) return false;
         int countEquals = 0;
         int countUnequals = 0;
